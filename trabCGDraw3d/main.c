@@ -58,7 +58,7 @@ void setEye()
         double Ex = -2*dim*Sin(th)*Cos(ph);
         double Ey = +2*dim        *Sin(ph);
         double Ez = +2*dim*Cos(th)*Cos(ph);
-        gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+        gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
     }
     /*  orthogonal */
     else {
@@ -103,56 +103,55 @@ void drawValues()
     }
 }
 
-void cube(double x,double y,double z,
-          double dx,double dy,double dz,
-          double th)
+void cube()
 {
     glPushMatrix();
-    
-    /*  Transformação do cubo */
-    glTranslated(x, y, z);
-    glRotated(th, 0, 1, 0);
-    glScaled(dx, dy, dz);
     
     glColor3f(1.0,1.0,0.0);
     
     /* Cubo */
     glBegin(GL_QUADS);
-        /* frente */
-        glVertex3fv(vertA);
-        glVertex3fv(vertB);
-        glVertex3fv(vertC);
-        glVertex3fv(vertD);
+    /* frente */
+    glNormal3d(0.0, 0.0, -1.0);
+    glVertex3fv(vertA);
+    glVertex3fv(vertB);
+    glVertex3fv(vertC);
+    glVertex3fv(vertD);
     
-        /* costas */
-        glVertex3fv(vertF);
-        glVertex3fv(vertE);
-        glVertex3fv(vertH);
-        glVertex3fv(vertG);
+    /* costas */
+    glNormal3d(0.0, 0.0, 1.0);
+    glVertex3fv(vertF);
+    glVertex3fv(vertE);
+    glVertex3fv(vertH);
+    glVertex3fv(vertG);
     
-        /* direita */
-        glVertex3fv(vertE);
-        glVertex3fv(vertA);
-        glVertex3fv(vertD);
-        glVertex3fv(vertH);
+    /* direita */
+    glNormal3d(-1.0, 0.0, 0.0);
+    glVertex3fv(vertE);
+    glVertex3fv(vertA);
+    glVertex3fv(vertD);
+    glVertex3fv(vertH);
     
-        /* esquerda */
-        glVertex3fv(vertB);
-        glVertex3fv(vertF);
-        glVertex3fv(vertG);
-        glVertex3fv(vertC);
+    /* esquerda */
+    glNormal3d(1.0, 0.0, 0.0);
+    glVertex3fv(vertB);
+    glVertex3fv(vertF);
+    glVertex3fv(vertG);
+    glVertex3fv(vertC);
     
-        /* topo */
-        glVertex3fv(vertE);
-        glVertex3fv(vertF);
-        glVertex3fv(vertB);
-        glVertex3fv(vertA);
-
-        /* base */
-        glVertex3fv(vertD);
-        glVertex3fv(vertC);
-        glVertex3fv(vertG);
-        glVertex3fv(vertH);
+    /* topo */
+    glNormal3d(0.0, -1.0, 0.0);
+    glVertex3fv(vertE);
+    glVertex3fv(vertF);
+    glVertex3fv(vertB);
+    glVertex3fv(vertA);
+    
+    /* base */
+    glNormal3d(0.0, 1.0, 0.0);
+    glVertex3fv(vertD);
+    glVertex3fv(vertC);
+    glVertex3fv(vertG);
+    glVertex3fv(vertH);
     glEnd();
     
     glPopMatrix();
@@ -164,17 +163,46 @@ void display()
     glEnable(GL_DEPTH_TEST);
     glLoadIdentity();
     
-    /* setup functions */
     setEye();
-    
-    /* draw */
     drawAxes();
     drawValues();
     
-    //desenha cabeça
-    cube(1, 0, 1, 1, 1, 1, 0);
-    //desenha tronco
-    cube(-1 ,0, 1, 3, 2, 1, 0);
+    glRotated(-90, 1, 0, 0);
+    glRotated(90, 0, 1, 0);
+    //    glRotated(20, 0, 0, 1);
+    glTranslated(0, 0, 2);
+    
+    /* cabeça */
+    glPushMatrix();
+    glTranslated(1, 0, 1);
+    glScaled(1, 1, 1);
+    cube();
+    glPopMatrix();
+    
+    /* tronco */
+    glPushMatrix();
+    glTranslated(1, 0, -1.2);
+    glScaled(1, 2, 3);
+    cube();
+    glPopMatrix();
+    
+    /* braço direito */
+    glPushMatrix();
+    glTranslated(0, -0.7, 1);
+    glScaled(0.3, 0.3, 1);
+    cube();
+    glPopMatrix();
+    
+    /* braço esquerdo */
+    //    glPushMatrix();
+    //        glTranslated(0, -0.7, -1);
+    //        glScaled(0.3, 0.3, 1);
+    //        cube();
+    //    glPopMatrix();
+    
+    /* perna direita */
+    
+    /* perna esquerda */
     
     glFlush();
     glutSwapBuffers();
@@ -250,6 +278,10 @@ int main(int argc,char* argv[])
     glutAddMenuEntry("Alternar valores [v]",'v');
     glutAddMenuEntry("Alterar modo [m]",'m');
     glutAttachMenu(GLUT_RIGHT_BUTTON);
+    
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
     
     glutMainLoop();
     return 0;
