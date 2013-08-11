@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F1FB82B417B6C0C000799B51"
-               BuildableName = "trabCGDraw3d"
-               BlueprintName = "trabCGDraw3d"
-               ReferencedContainer = "container:trabCGDraw3d.xcodeproj">
+               BlueprintIdentifier = "9F9D96C017B7EF9400791E9A"
+               BuildableName = "cgTrab2"
+               BlueprintName = "cgTrab2"
+               ReferencedContainer = "container:cgTrab2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1FB82B417B6C0C000799B51"
-            BuildableName = "trabCGDraw3d"
-            BlueprintName = "trabCGDraw3d"
-            ReferencedContainer = "container:trabCGDraw3d.xcodeproj">
+            BlueprintIdentifier = "9F9D96C017B7EF9400791E9A"
+            BuildableName = "cgTrab2"
+            BlueprintName = "cgTrab2"
+            ReferencedContainer = "container:cgTrab2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1FB82B417B6C0C000799B51"
-            BuildableName = "trabCGDraw3d"
-            BlueprintName = "trabCGDraw3d"
-            ReferencedContainer = "container:trabCGDraw3d.xcodeproj">
+            BlueprintIdentifier = "9F9D96C017B7EF9400791E9A"
+            BuildableName = "cgTrab2"
+            BlueprintName = "cgTrab2"
+            ReferencedContainer = "container:cgTrab2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1FB82B417B6C0C000799B51"
-            BuildableName = "trabCGDraw3d"
-            BlueprintName = "trabCGDraw3d"
-            ReferencedContainer = "container:trabCGDraw3d.xcodeproj">
+            BlueprintIdentifier = "9F9D96C017B7EF9400791E9A"
+            BuildableName = "cgTrab2"
+            BlueprintName = "cgTrab2"
+            ReferencedContainer = "container:cgTrab2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

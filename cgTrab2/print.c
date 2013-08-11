@@ -1,13 +1,31 @@
 //
 //  print.c
-//  trabCGDraw3d
+//  cgTrab2
 //
-//  Created by Carolina Zamith Cunha on 8/10/13.
-//  Copyright (c) 2013 Carolina Zamith Cunha. All rights reserved.
+//  Created by Marcelle Guine on 11/08/13.
+//  Copyright (c) 2013 Marcelle Guine. All rights reserved.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
 
-#include "screencasts.h"
+/* OpenGL */
+#ifdef USEGLEW
+#include <GL/glew.h>
+#endif
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+#include "print.h"
+
 
 #define LEN 8192
 void printv(va_list args, const char* format)

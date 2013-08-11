@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>trabCGDraw3d.xcscheme</key>
+		<key>cgTrab2.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>F1FB82B417B6C0C000799B51</key>
+		<key>9F9D96C017B7EF9400791E9A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
