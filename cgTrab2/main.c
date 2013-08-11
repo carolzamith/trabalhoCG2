@@ -11,6 +11,7 @@
 #endif
 
 #include <stdlib.h>
+#include <math.h>
 #include "print.h"
 
 #ifdef __APPLE__
@@ -18,6 +19,10 @@
 #else
 #include <GL/glut.h>
 #endif
+
+#define PI 3.1415926535898
+#define Cos(th) cos(PI/180*(th))
+#define Sin(th) sin(PI/180*(th))
 
 enum STATE {
 	NO_STATE,
@@ -40,6 +45,9 @@ int menu_option;
 int toggleAxes = 0;   /* eixos on/off */
 int th = 0;  /* azimute do angulo de visão */
 int ph = 0;  /* elevação do angulo de visão */
+int fov = 60;   /* campo de visão */
+//int fov = 30;   /* campo de visão */
+int asp = 1.0;    /* relação de aspecto */
 
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
@@ -75,6 +83,25 @@ void drawAxes()
         glRasterPos3d(0,0,len);
         print("Z");
     }
+}
+
+void project()
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    gluPerspective(fov, asp, 1.25, 20);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void setEye()
+{
+    double Ex = -10*Sin(th)*Cos(ph);
+    double Ey = +10        *Sin(ph);
+    double Ez = +10*Cos(th)*Cos(ph);
+    gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
 }
 
 void drawKnuckle(){
@@ -198,11 +225,12 @@ void Display(void)
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
+    drawAxes();
+//    setEye();
+    
     glTranslatef (0.0, 0.0, -8.0);
     glRotated(ph, 1, 0, 0);
     glRotated(th, 0, 1, 0);
-    
-    drawAxes();
     
     glPushMatrix();
 
@@ -245,25 +273,6 @@ void Display(void)
     
     glFlush();
     glutSwapBuffers();
-}
-
-void Reshape (int w, int h)
-{
-    /* Configura o tamanho da janela de desenho como igual o tamanho total   */
-    /* do canvas                                                             */
-    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
-    /* Seleciona a matriz de modelagem e visualização*/
-    glMatrixMode (GL_PROJECTION);
-    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
-    glLoadIdentity ();
-    /* Cria o volume de visualização(frustum). A especificação do volume de  */
-    /* visualização permite a OpenGL inferir a matriz de projeção            */
-    gluPerspective(65.0, (GLfloat) w/(GLfloat)h, 1.0, 500.0);
-    //glOrtho(-75.0,75.0,-75.0,75.0,-500.0,500.0);
-    /* Seleciona a matriz de modelagem e visualização*/
-    glMatrixMode(GL_MODELVIEW);
-    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
-    glLoadIdentity();
 }
 
 void menu(int menu_option) {
@@ -369,6 +378,7 @@ void Keyboard (unsigned char key, int x, int y)
         toggleAxes = 1 - toggleAxes;
     }
     
+    project();
     glutPostRedisplay();
 }
 
@@ -572,6 +582,7 @@ void SpecialKeyboard(int key, int x, int y)
     th %= 360;
     ph %= 360;
     
+    project();
     glutPostRedisplay();
 }
 
@@ -649,6 +660,29 @@ void InitLighting()
     //glEnable(GL_LIGHT0);
     /* Habilita fonte de luz 1 */
     glEnable(GL_LIGHT1);
+}
+
+void Reshape (int w, int h)
+{
+    /* Configura o tamanho da janela de desenho como igual o tamanho total   */
+    /* do canvas                                                             */
+    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+    /* Seleciona a matriz de modelagem e visualização*/
+    glMatrixMode (GL_PROJECTION);
+    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
+    glLoadIdentity ();
+    /* Cria o volume de visualização(frustum). A especificação do volume de  */
+    /* visualização permite a OpenGL inferir a matriz de projeção            */
+    gluPerspective(65.0, (GLfloat) w/(GLfloat)h, 1.0, 500.0);
+    //glOrtho(-75.0,75.0,-75.0,75.0,-500.0,500.0);
+    /* Seleciona a matriz de modelagem e visualização*/
+    glMatrixMode(GL_MODELVIEW);
+    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
+    glLoadIdentity();
+    
+    asp = (h>0) ? (double)w/h : 1;
+    glViewport(0, 0, w, h);
+    project();
 }
 
 void Idle(void) { }
