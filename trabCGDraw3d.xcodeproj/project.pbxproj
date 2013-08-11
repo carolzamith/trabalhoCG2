@@ -33,8 +33,6 @@
 		F1FB82BA17B6C0C100799B51 /* trabCGDraw3d.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = trabCGDraw3d.1; sourceTree = "<group>"; };
 		F1FB82C117B6C0CF00799B51 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		F1FB82C317B6C0D400799B51 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		F1FB82C517B6C1BE00799B51 /* screencasts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = screencasts.h; sourceTree = "<group>"; };
-		F1FB82C617B6C1D600799B51 /* prototypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prototypes.h; sourceTree = "<group>"; };
 		F1FB82C717B6C1E900799B51 /* print.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = print.c; sourceTree = "<group>"; };
 		F1FB82C917B6C1FF00799B51 /* print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = print.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,8 +73,6 @@
 			children = (
 				F1FB82B817B6C0C100799B51 /* main.c */,
 				F1FB82BA17B6C0C100799B51 /* trabCGDraw3d.1 */,
-				F1FB82C517B6C1BE00799B51 /* screencasts.h */,
-				F1FB82C617B6C1D600799B51 /* prototypes.h */,
 				F1FB82C717B6C1E900799B51 /* print.c */,
 				F1FB82C917B6C1FF00799B51 /* print.h */,
 			);
@@ -234,6 +230,7 @@
 				F1FB82C017B6C0C100799B51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

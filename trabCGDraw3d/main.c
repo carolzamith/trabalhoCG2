@@ -1,10 +1,28 @@
-#include "screencasts.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+
+#include "print.h"
+
+/* OpenGL */
+#ifdef USEGLEW
+#include <GL/glew.h>
+#endif
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 
 #define PI 3.1415926535898
 #define Cos(th) cos(PI/180*(th))
 #define Sin(th) sin(PI/180*(th))
-/*  D graus de rotação */
-#define DEF_D 5
+#define DEF_D 5 /* graus de rotação */
 
 /*  Globais */
 double dim = 5.0; /* dimensões caixa ortogonal */
