@@ -19,6 +19,23 @@
 #include <GL/glut.h>
 #endif
 
+enum STATE {
+	NO_STATE,
+    M_HEAD,
+    M_TRUNK,
+    M_LEFT_ARM,
+    M_RIGHT_ARM,
+    M_LEFT_FOREARM,
+    M_RIGHT_FOREARM,
+    M_LEFT_LEG,
+    M_RIGHT_LEG,
+    M_LEFT_THIGH,
+    M_RIGHT_THIGH
+
+} current_state = NO_STATE;
+
+int menu_option;
+
 /*  Variáveis globais */
 int toggleAxes = 0;   /* eixos on/off */
 int toggleValues = 1; /* print valores on/off */
@@ -34,6 +51,7 @@ GLubyte v_colors[][3]   = {
     {255,  0,255}, /* violet */
     {255,255,255}, /* white  */
     {  0,255,255}};/* cyan   */
+
 
 /* Desenha os eixos */
 void drawAxes()
@@ -69,6 +87,354 @@ void drawValues()
     }
 }
 
+void drawKnuckle(){
+    glPushMatrix();
+    
+    glColor3ubv(v_colors[3]);
+    glScalef(0.15, 0.15, 0.15);
+    glutSolidSphere(1, 16, 16);
+    
+    glPopMatrix();
+}
+
+void drawHead()
+{
+    glPushMatrix();
+    
+    //cabeça
+    glColor3ubv(v_colors[2]);
+    glScalef(0.8, 0.8, 0.8);
+    glutSolidCube(1);
+
+    //pescoço
+    glTranslatef(0.0, -0.65, 0.0);
+    drawKnuckle();
+    
+    glPopMatrix();
+}
+
+void drawTrunk()
+{
+    glPushMatrix();
+    
+    //tronco
+    glColor3ubv(v_colors[2]);
+    glScalef(1.2, 1.7, 0.5);
+    glutSolidCube(1);
+    
+    glPopMatrix();
+}
+
+void drawArm()
+{    
+    glPushMatrix();
+    
+    //ombro
+    drawKnuckle();
+    
+    //antebraço
+    glColor3ubv(v_colors[2]);
+    glTranslatef(0.0, -0.55, 0.0);
+    glPushMatrix();
+    glScalef(0.2, 0.8, 0.2);
+    glutSolidCube(1);
+    glPopMatrix();
+
+    //cotovelo
+    glTranslatef(0.0, -0.55, 0.0);
+    drawKnuckle();
+    
+    //braço
+    glColor3ubv(v_colors[2]);
+    glRotatef(-30.0, 1.0, 0.0, 0.0);
+    glTranslatef(0.0, -0.55, 0.0);
+    glPushMatrix();
+    glScalef(0.2, 0.8, 0.2);
+    glutSolidCube(1);
+    glPopMatrix();
+    
+    //dedos
+    glColor3ubv(v_colors[6]);
+    glTranslatef(0.0, -0.5, 0.0);
+    glScalef(0.15, 0.25, 0.15);
+    glutSolidCube(1);
+    
+    glPopMatrix();
+}
+
+void drawLeg()
+{
+    //anti coxa
+    drawKnuckle();
+    
+    //coxa
+    glColor3ubv(v_colors[2]);
+    glTranslatef(0.0, -0.65, 0.0);
+    glPushMatrix();
+    glScalef(0.3, 1, 0.3);
+    glutSolidCube(1);
+    glPopMatrix();
+    
+    //joelho
+    glTranslatef(0.0, -0.65, 0.0);
+    drawKnuckle();
+    
+    //panturrilha
+    glColor3ubv(v_colors[2]);
+    glTranslatef(0.0, -0.65, 0.0);
+    glPushMatrix();
+    glScalef(0.3, 1, 0.3);
+    glutSolidCube(1);
+    glPopMatrix();
+    
+    //dedos
+    glColor3ubv(v_colors[6]);
+    glTranslatef(0.0, -0.55, 0.05);
+    glScalef(0.35, 0.15, 0.4);
+    glutSolidCube(1);
+    
+}
+
+void Display(void)
+{
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    glTranslatef (0.0, 0.0, -8.0);
+    glRotated(ph, 1, 0, 0);
+    glRotated(th, 0, 1, 0);
+    
+    drawAxes();
+    drawValues();
+    
+    glPushMatrix();
+
+    //tronco
+    drawTrunk();
+    
+    //cabeça
+    glPushMatrix();
+    glTranslatef (0.0, 1.45, 0.0);
+    drawHead();
+    glPopMatrix();
+    
+    //braço esquerdo
+    glPushMatrix();
+    glTranslatef(-0.75, 0.4, 0.0);
+    glRotatef(-15.0, 0.0, 0.0, 1.0);
+    drawArm();
+    glPopMatrix();
+    
+    //braço direito
+    glPushMatrix();
+    glTranslatef(0.75, 0.4, 0.0);
+    glRotatef(15.0, 0.0, 0.0, 1.0);
+    drawArm();
+    glPopMatrix();
+    
+    glPopMatrix(); 
+    
+    //perna esquerda
+    glPushMatrix();
+    glTranslatef(-0.3, -1.0, 0.0);
+    drawLeg();
+    glPopMatrix();
+    
+    //perna direita
+    glPushMatrix();
+    glTranslatef(0.3, -1.0, 0.0);
+    drawLeg();
+    glPopMatrix();
+    
+    glFlush();
+    glutSwapBuffers();
+}
+
+void Reshape (int w, int h)
+{
+    /* Configura o tamanho da janela de desenho como igual o tamanho total   */
+    /* do canvas                                                             */
+    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+    /* Seleciona a matriz de modelagem e visualização*/
+    glMatrixMode (GL_PROJECTION);
+    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
+    glLoadIdentity ();
+    /* Cria o volume de visualização(frustum). A especificação do volume de  */
+    /* visualização permite a OpenGL inferir a matriz de projeção            */
+    gluPerspective(65.0, (GLfloat) w/(GLfloat)h, 1.0, 500.0);
+    //glOrtho(-75.0,75.0,-75.0,75.0,-500.0,500.0);
+    /* Seleciona a matriz de modelagem e visualização*/
+    glMatrixMode(GL_MODELVIEW);
+    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
+    glLoadIdentity();
+}
+
+void menu(int menu_option) {
+    
+	switch(menu_option) {
+            
+            /* Movimentar cabeça */
+        case 1:
+            current_state = M_HEAD;
+            break;
+            
+            /* Movimentar tronco */
+        case 2:
+            current_state = M_TRUNK;
+            break;
+            
+            /* Movimentar braço esquerdo */
+        case 3:
+            current_state = M_LEFT_ARM;
+            break;
+            
+            /* Movimentar braço direito */
+        case 4:
+            current_state = M_RIGHT_ARM;
+            break;
+            
+            /* Movimentar antebraço esquerdo */
+        case 5:
+            current_state = M_LEFT_FOREARM;
+            break;
+            
+            /* Movimentar antebraço direito */
+        case 6:
+            current_state = M_RIGHT_FOREARM;
+            break;
+            
+            /* Movimentar perna esquerda */
+        case 7:
+            current_state = M_LEFT_LEG;
+            break;
+            
+            /* Movimentar perna direita */
+        case 8:
+            current_state = M_RIGHT_LEG;
+            break;
+            
+            /* Movimentar coxa esquerda */
+        case 9:
+            current_state = M_LEFT_THIGH;
+            break;
+            
+            /* Movimentar coxa direita */
+        case 10:
+            current_state = M_RIGHT_THIGH;
+            break;
+            
+            /* Movimentar mundo */
+        case 11:
+            current_state = NO_STATE;
+            break;
+            
+            /* Sair */
+        case 0:
+            exit(EXIT_SUCCESS);
+            
+        default:
+            exit(EXIT_SUCCESS);
+            
+	}
+    
+	glutPostRedisplay();
+}
+
+void createMenu(void) {
+	menu_option = glutCreateMenu(menu);
+	glutAddMenuEntry("Movimentar cabeça", 1);
+	glutAddMenuEntry("Movimentar tronco", 2);
+	glutAddMenuEntry("Movimentar braço esquerdo", 3);
+	glutAddMenuEntry("Movimentar braço direito", 4);
+	glutAddMenuEntry("Movimentar antebraço esquerdo", 5);
+	glutAddMenuEntry("Movimentar antebraço direito", 6);
+	glutAddMenuEntry("Movimentar perna esquerda", 7);
+	glutAddMenuEntry("Movimentar perna direita", 8);
+	glutAddMenuEntry("Movimentar coxa esquerda", 9);
+	glutAddMenuEntry("Movimentar coxa direita", 10);
+	glutAddMenuEntry("Movimentar mundo", 11);
+	glutAddMenuEntry("Sair", 0);
+    
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+// Callback para tratamento de eventos de teclado
+void Keyboard (unsigned char key, int x, int y)
+{
+    if (key == 27) exit(0);
+    else if (key == 'a' || key == 'A') toggleAxes = 1-toggleAxes;
+    else if (key == 'v' || key == 'V') toggleValues = 1-toggleValues;
+    
+    glutPostRedisplay();
+}
+
+void SpecialKeyboard(int key, int x, int y)
+{
+    //movimenta o mundo
+    if (current_state == NO_STATE)
+    {
+        if (key == GLUT_KEY_RIGHT) th += 5;
+        else if (key == GLUT_KEY_LEFT) th -= 5;
+        else if (key == GLUT_KEY_UP) ph += 5;
+        else if (key == GLUT_KEY_DOWN) ph -= 5;
+    }
+    
+    else if (current_state == M_HEAD)
+    {
+        
+    }
+    
+    else if ( current_state == M_TRUNK)
+    {
+        
+    }
+    
+    else if (current_state == M_LEFT_ARM)
+    {
+        
+    }
+    
+    else if (current_state == M_RIGHT_ARM)
+    {
+        
+    }
+    
+    else if (current_state == M_LEFT_FOREARM)
+    {
+        
+    }
+    
+    else if (current_state == M_RIGHT_FOREARM)
+    {
+        
+    }
+    
+    else if (current_state == M_LEFT_LEG)
+    {
+        
+    }
+    
+    else if (current_state == M_RIGHT_LEG)
+    {
+        
+    }
+    
+    else if (current_state == M_LEFT_THIGH)
+    {
+        
+    }
+    
+    else if (current_state == M_RIGHT_THIGH)
+    {
+        
+    }
+    
+    /*  Mantém angulos em +/-360 graus */
+    th %= 360;
+    ph %= 360;
+    
+    glutPostRedisplay();
+}
 
 void InitLighting();
 
@@ -97,9 +463,10 @@ void Init(void)
     
     /* Configura a iluminação                                  */
     InitLighting();
+    
+    /* Cria menu */
+    createMenu();
 }
-
-
 
 void InitLighting()
 {
@@ -107,7 +474,7 @@ void InitLighting()
     GLfloat mat_shininess[]        = {100.0};
     GLfloat light_position1[]      = {200.0,200.0,200.0,1.0};
     GLfloat light_position2[]      = {-500.0,500.0,0.0,1.0};
-
+    
     GLfloat white_light_specular[] = {1.0,1.0,1.0,1.0};
     GLfloat white_light_diffuse[]  = {1.0,1.0,1.0,1.0};
     
@@ -146,213 +513,7 @@ void InitLighting()
     glEnable(GL_LIGHT1);
 }
 
-void drawknuckle(){
-    glPushMatrix();
-    
-    glColor3ubv(v_colors[3]);
-    glScalef(0.15, 0.15, 0.15);
-    glutSolidSphere(1, 16, 16);
-    
-    glPopMatrix();
-}
-
-void drawHead()
-{
-    glPushMatrix();
-    
-    //cabeça
-    glColor3ubv(v_colors[2]);
-    glScalef(0.8, 0.8, 0.8);
-    glutSolidCube(1);
-
-    //pescoço
-    glTranslatef(0.0, -0.65, 0.0);
-    drawknuckle();
-    
-    glPopMatrix();
-}
-
-void drawTrunk()
-{
-    glPushMatrix();
-    
-    //tronco
-    glColor3ubv(v_colors[2]);
-    glScalef(1.2, 1.7, 0.5);
-    glutSolidCube(1);
-    
-    glPopMatrix();
-}
-
-void drawArm()
-{    
-    glPushMatrix();
-    
-    //ombro
-    drawknuckle();
-    
-    //antebraço
-    glColor3ubv(v_colors[2]);
-    glTranslatef(0.0, -0.55, 0.0);
-    glPushMatrix();
-    glScalef(0.2, 0.8, 0.2);
-    glutSolidCube(1);
-    glPopMatrix();
-
-    //cotuvelo
-    glTranslatef(0.0, -0.55, 0.0);
-    drawknuckle();
-    
-    //braço
-    glColor3ubv(v_colors[2]);
-    glRotatef(-30.0, 1.0, 0.0, 0.0);
-    glTranslatef(0.0, -0.55, 0.0);
-    glPushMatrix();
-    glScalef(0.2, 0.8, 0.2);
-    glutSolidCube(1);
-    glPopMatrix();
-    
-    //dedos
-    glColor3ubv(v_colors[6]);
-    glTranslatef(0.0, -0.5, 0.0);
-    glScalef(0.15, 0.25, 0.15);
-    glutSolidCube(1);
-    
-    glPopMatrix();
-}
-
-void drawLeg()
-{
-    //anti coxa
-    drawknuckle();
-    
-    //coxa
-    glColor3ubv(v_colors[2]);
-    glTranslatef(0.0, -0.65, 0.0);
-    glPushMatrix();
-    glScalef(0.3, 1, 0.3);
-    glutSolidCube(1);
-    glPopMatrix();
-    
-    //joelho
-    glTranslatef(0.0, -0.65, 0.0);
-    drawknuckle();
-    
-    //panturrilha
-    glColor3ubv(v_colors[2]);
-    glTranslatef(0.0, -0.65, 0.0);
-    glPushMatrix();
-    glScalef(0.3, 1, 0.3);
-    glutSolidCube(1);
-    glPopMatrix();
-    
-    //dedos
-    glColor3ubv(v_colors[6]);
-    glTranslatef(0.0, -0.55, 0.05);
-    glScalef(0.35, 0.15, 0.4);
-    glutSolidCube(1);
-    
-}
-
-void Display(void)
-{
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    
-    glTranslatef (0.0, 0.0, -8.0);
-    glRotated(ph, 1, 0, 0);
-    glRotated(th, 0, 1, 0);
-    
-    drawAxes();
-    drawValues();
-    
-    //tronco
-    drawTrunk();
-    
-    //cabeça
-    glPushMatrix();
-    glTranslatef (0.0, 1.45, 0.0);
-    drawHead();
-    glPopMatrix();
-    
-    //braço esquerdo
-    glPushMatrix();
-    glTranslatef(-0.75, 0.4, 0.0);
-    glRotatef(-15.0, 0.0, 0.0, 1.0);
-    drawArm();
-    glPopMatrix();
-    
-    //braço direito
-    glPushMatrix();
-    glTranslatef(0.75, 0.4, 0.0);
-    glRotatef(15.0, 0.0, 0.0, 1.0);
-    drawArm();
-    glPopMatrix();
-    
-    //perna esquerda
-    glPushMatrix();
-    glTranslatef(-0.3, -1.0, 0.0);
-    drawLeg();
-    glPopMatrix();
-    
-    //perna direita
-    glPushMatrix();
-    glTranslatef(0.3, -1.0, 0.0);
-    drawLeg();
-    glPopMatrix();
-    
-    glFlush();
-    glutSwapBuffers();
-}
-
-void Reshape (int w, int h)
-{
-    /* Configura o tamanho da janela de desenho como igual o tamanho total   */
-    /* do canvas                                                             */
-    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
-    /* Seleciona a matriz de modelagem e visualização*/
-    glMatrixMode (GL_PROJECTION);
-    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
-    glLoadIdentity ();
-    /* Cria o volume de visualização(frustum). A especificação do volume de  */
-    /* visualização permite a OpenGL inferir a matriz de projeção            */
-    gluPerspective(65.0, (GLfloat) w/(GLfloat)h, 1.0, 500.0);
-    //glOrtho(-75.0,75.0,-75.0,75.0,-500.0,500.0);
-    /* Seleciona a matriz de modelagem e visualização*/
-    glMatrixMode(GL_MODELVIEW);
-    /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
-    glLoadIdentity();
-}
-
-// Callback para tratamento de eventos de teclado
-void Keyboard (unsigned char key, int x, int y)
-{
-    if (key == 27) exit(0);
-    else if (key == 'a' || key == 'A') toggleAxes = 1-toggleAxes;
-    else if (key == 'v' || key == 'V') toggleValues = 1-toggleValues;
-    
-    glutPostRedisplay();
-}
-
-void SpecialKeyboard(int key, int x, int y)
-{
-    //movimenta o boneco
-    if (key == GLUT_KEY_RIGHT) th += 5;
-    else if (key == GLUT_KEY_LEFT) th -= 5;
-    else if (key == GLUT_KEY_UP) ph += 5;
-    else if (key == GLUT_KEY_DOWN) ph -= 5;
-    
-    /*  Mantém angulos em +/-360 graus */
-    th %= 360;
-    ph %= 360;
-    
-    glutPostRedisplay();
-}
-
-void Idle(void)
-{
-    
-}
+void Idle(void) { }
 
 int main(int argc, char** argv)
 {
