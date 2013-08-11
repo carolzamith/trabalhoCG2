@@ -620,10 +620,11 @@ void Init(void)
 
 void InitLighting()
 {
-    GLfloat mat_specular[]         = {1.0,1.0,1.0,1.0};
+    GLfloat mat_specular[]         = {1.0, 1.0, 1.0, 1.0};
     GLfloat mat_shininess[]        = {100.0};
-    GLfloat light_position1[]      = {200.0,200.0,200.0,1.0};
-    GLfloat light_position2[]      = {-500.0,500.0,0.0,1.0};
+    GLfloat light_position1[]      = {200.0, 200.0, 200.0, 1.0};
+    GLfloat light_position2[]      = {-500.0, 500.0, 0.0, 1.0};
+    GLfloat light_position3[]      = {700.0, -700.0, 0.0, 1.0};
     
     GLfloat white_light_specular[] = {1.0,1.0,1.0,1.0};
     GLfloat white_light_diffuse[]  = {1.0,1.0,1.0,1.0};
@@ -654,11 +655,20 @@ void InitLighting()
     /* Define a intensidade da componenente specular da fonte de luz 1 em cada componente   */
     glLightfv(GL_LIGHT1, GL_SPECULAR, white_light_diffuse);
     
+    /* Define a posicao da fonte de luz 2 */
+    glLightfv(GL_LIGHT2, GL_POSITION, light_position3);
+    /* Define a intensidade da componenente difusa   da fonte de luz 1 em cada componente   */
+    glLightfv(GL_LIGHT2, GL_DIFFUSE,  white_light_specular);
+    /* Define a intensidade da componenente specular da fonte de luz 1 em cada componente   */
+    glLightfv(GL_LIGHT2, GL_SPECULAR, white_light_diffuse);
+    
     /* Habilita iluminação */
     glEnable(GL_LIGHTING);
     /* Habilita fonte de luz 0 */
-    //glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
     /* Habilita fonte de luz 1 */
+    glEnable(GL_LIGHT1);
+    /* Habilita fonte de luz 2 */
     glEnable(GL_LIGHT1);
 }
 
