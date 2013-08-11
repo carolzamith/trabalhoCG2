@@ -11,7 +11,6 @@
 #endif
 
 #include <stdlib.h>
-#include "primitives.h"
 #include "print.h"
 
 #ifdef __APPLE__
@@ -98,9 +97,6 @@ void Init(void)
     
     /* Configura a iluminação                                  */
     InitLighting();
-    /* Cria listas de display para cubos e quadricas           */
-    InitCubesDisplayLists();
-    InitQuadrics();
 }
 
 
