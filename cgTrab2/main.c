@@ -617,7 +617,6 @@ void InitLighting()
     GLfloat white_light_specular[] = {1.0,1.0,1.0,1.0};
     GLfloat white_light_diffuse[]  = {1.0,1.0,1.0,1.0};
     
-    
     /* Define modelo de iluminação suave. A intensidade de cor nos pixels é calculada       */
     /* com base na interpolação dos atributos definidos nos vértices durante a rasterização */
     glShadeModel(GL_SMOOTH);
