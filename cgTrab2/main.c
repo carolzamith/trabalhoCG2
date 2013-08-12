@@ -66,7 +66,7 @@ void drawAxes()
     if (toggleAxes) {
         /*  Tamanho dos eixos */
         double len = 2.0;
-        glColor3f(1.0,1.0,1.0);
+        glColor3ubv(v_colors[0]);
         glBegin(GL_LINES);
         glVertex3d(0,0,0);
         glVertex3d(len,0,0);
@@ -104,7 +104,8 @@ void setEye()
     gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
 }
 
-void drawKnuckle(){
+void drawKnuckle()
+{
     glPushMatrix();
     
     glColor3ubv(v_colors[5]);
@@ -117,6 +118,8 @@ void drawKnuckle(){
 void drawHead()
 {
     glPushMatrix();
+    
+    glTranslatef (0.0, 1.45, 0.0);
     
     //chapéu
     glColor3ubv(v_colors[6]);
@@ -150,8 +153,8 @@ void drawTrunk()
     glPopMatrix();
 }
 
-void drawArm()
-{    
+void drawForeArm()
+{
     glPushMatrix();
     
     //ombro
@@ -164,9 +167,16 @@ void drawArm()
     glScalef(0.2, 0.8, 0.2);
     glutSolidCube(1);
     glPopMatrix();
+    
+    glPopMatrix();
+}
 
+void drawArm()
+{    
+    glPushMatrix();
+    
     //cotovelo
-    glTranslatef(0.0, -0.55, 0.0);
+    glTranslatef(0.0, -1.1, 0.0);
     drawKnuckle();
     
     //braço
@@ -187,8 +197,42 @@ void drawArm()
     glPopMatrix();
 }
 
-void drawLeg()
+void drawFullArm()
 {
+    glPushMatrix();
+    
+    drawForeArm();
+    drawArm();
+    
+    glPopMatrix();
+}
+
+void drawLeftArm()
+{
+    glPushMatrix();
+    
+    glTranslatef(-0.75, 0.4, 0.0);
+    glRotatef(-15.0, 0.0, 0.0, 1.0);
+    drawFullArm();
+    
+    glPopMatrix();
+}
+
+void drawRightArm()
+{
+    glPushMatrix();
+    
+    glTranslatef(0.75, 0.4, 0.0);
+    glRotatef(15.0, 0.0, 0.0, 1.0);
+    drawFullArm();
+    
+    glPopMatrix();
+}
+
+void drawThigh()
+{
+    glPushMatrix();
+    
     //anti coxa
     drawKnuckle();
     
@@ -199,6 +243,13 @@ void drawLeg()
     glScalef(0.3, 1, 0.3);
     glutSolidCube(1);
     glPopMatrix();
+    
+    glPopMatrix();
+}
+
+void drawLeg()
+{
+    glPushMatrix();
     
     //joelho
     glTranslatef(0.0, -0.65, 0.0);
@@ -218,6 +269,61 @@ void drawLeg()
     glScalef(0.35, 0.15, 0.4);
     glutSolidCube(1);
     
+    glPopMatrix();
+}
+
+void drawFullLeg()
+{    
+    glPushMatrix();
+    
+    drawThigh();
+    drawLeg();
+    
+    glPopMatrix();
+}
+
+void drawLeftLeg()
+{
+    glPushMatrix();
+    
+    glTranslatef(-0.3, -1.0, 0.0);
+    drawFullLeg();
+    
+    glPopMatrix();
+}
+
+void drawRightLeg()
+{
+    glPushMatrix();
+    
+    glTranslatef(0.3, -1.0, 0.0);
+    drawFullLeg();
+    
+    glPopMatrix();
+}
+
+void fullTrunk()
+{
+    glPushMatrix();
+    
+    drawTrunk();
+    drawHead();
+    drawLeftArm();
+    drawRightArm();
+    
+    glPopMatrix();
+}
+
+void drawRobot()
+{
+    glPushMatrix();
+    
+    fullTrunk();
+    
+    drawLeftLeg();
+    drawRightLeg();
+    
+    glPopMatrix();
 }
 
 void Display(void)
@@ -232,44 +338,16 @@ void Display(void)
     glRotated(ph, 1, 0, 0);
     glRotated(th, 0, 1, 0);
     
-    glPushMatrix();
-
-    //tronco
-    drawTrunk();
+    drawRobot();
     
-    //cabeça
-    glPushMatrix();
-    glTranslatef (0.0, 1.45, 0.0);
-    drawHead();
-    glPopMatrix();
-    
-    //braço esquerdo
-    glPushMatrix();
-    glTranslatef(-0.75, 0.4, 0.0);
-    glRotatef(-15.0, 0.0, 0.0, 1.0);
-    drawArm();
-    glPopMatrix();
-    
-    //braço direito
-    glPushMatrix();
-    glTranslatef(0.75, 0.4, 0.0);
-    glRotatef(15.0, 0.0, 0.0, 1.0);
-    drawArm();
-    glPopMatrix();
-    
-    glPopMatrix(); 
-    
-    //perna esquerda
-    glPushMatrix();
-    glTranslatef(-0.3, -1.0, 0.0);
-    drawLeg();
-    glPopMatrix();
-    
-    //perna direita
-    glPushMatrix();
-    glTranslatef(0.3, -1.0, 0.0);
-    drawLeg();
-    glPopMatrix();
+    //chão
+    glColor3f(0.0, 0.5, 0.0);
+	glPushMatrix();
+    glRotated(90, 1, 0, 0);
+    glTranslatef(0.0, 0.0, 3.1);
+    glScalef(1.5, 1.5, 0.3);
+    glutSolidSphere(0.75, 20, 20);
+	glPopMatrix();
     
     glFlush();
     glutSwapBuffers();
@@ -590,8 +668,9 @@ void InitLighting();
 
 void Init(void)
 {
-    /* Seleciona a cor negra como cor de fundo                 */
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+    /* Seleciona a cor de fundo                 */
+    glClearColor(0.0, 0.7, 1.0, 1.0);
+//    glClearColor(0.0, 0.0, 0.0, 1.0);
     /* Habilita o teste de profundidade (Zbuffer)              */
     /* Um pixel é desenhado com a cor da superfície se esta tem*/
     /* profundidade menor ou igual ao valor atual armazenado no*/
