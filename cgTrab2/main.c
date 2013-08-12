@@ -232,7 +232,7 @@ void drawLeg()
     glPushMatrix();
     
     //joelho
-    glTranslatef(0.0, -0.65, 0.0);
+    glTranslatef(0.0, -1.3, 0.0);
     drawKnuckle();
     
     //panturrilha
@@ -324,7 +324,7 @@ void Display(void)
     glColor3f(0.0, 0.5, 0.0);
 	glPushMatrix();
     glRotated(90, 1, 0, 0);
-    glTranslatef(0.0, 0.0, 3.1);
+    glTranslatef(0.0, 0.0, 3.8);
     glScalef(1.5, 1.5, 0.3);
     glutSolidSphere(0.75, 20, 20);
 	glPopMatrix();
