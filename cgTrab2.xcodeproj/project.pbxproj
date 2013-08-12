@@ -11,7 +11,6 @@
 		9F9D96C717B7EF9400791E9A /* cgTrab2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9F9D96C617B7EF9400791E9A /* cgTrab2.1 */; };
 		9F9D96CE17B7EF9F00791E9A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9D96CD17B7EF9F00791E9A /* OpenGL.framework */; };
 		9F9D96D017B7EFA300791E9A /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9D96CF17B7EFA300791E9A /* GLUT.framework */; };
-		9F9D96F517B7FC2500791E9A /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F9D96F417B7FC2500791E9A /* print.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,8 +32,6 @@
 		9F9D96C617B7EF9400791E9A /* cgTrab2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = cgTrab2.1; sourceTree = "<group>"; };
 		9F9D96CD17B7EF9F00791E9A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		9F9D96CF17B7EFA300791E9A /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		9F9D96F417B7FC2500791E9A /* print.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = print.c; sourceTree = "<group>"; };
-		9F9D96F617B7FC6E00791E9A /* print.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = print.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,8 +70,6 @@
 			children = (
 				9F9D96C417B7EF9400791E9A /* main.c */,
 				9F9D96C617B7EF9400791E9A /* cgTrab2.1 */,
-				9F9D96F417B7FC2500791E9A /* print.c */,
-				9F9D96F617B7FC6E00791E9A /* print.h */,
 			);
 			path = cgTrab2;
 			sourceTree = "<group>";
@@ -131,7 +126,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F9D96C517B7EF9400791E9A /* main.c in Sources */,
-				9F9D96F517B7FC2500791E9A /* print.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
