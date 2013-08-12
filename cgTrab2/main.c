@@ -47,7 +47,10 @@ int ph = 0;  /* elevação do angulo de visão */
 int fov = 60;   /* campo de visão */
 //int fov = 30;   /* campo de visão */
 int asp = 1.0;    /* relação de aspecto */
-
+int angle = 0;
+int tx = 0;
+int ty = 0;
+int tz=0;
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
     {255,  0,  0}, /* red    */
@@ -94,7 +97,8 @@ void drawKnuckle()
 void drawHead()
 {
     glPushMatrix();
-    
+    glRotatef(-angle, 1.0, (GLfloat)angle/100.0, -(GLfloat)angle/100.0);
+    glRotatef(angle, 0, 1, 0);
     glTranslatef (0.0, 1.45, 0.0);
     
     //chapéu
@@ -280,6 +284,7 @@ void drawRightLeg()
 
 void fullTrunk()
 {
+    
     glPushMatrix();
     
     drawTrunk();
@@ -417,6 +422,8 @@ void createMenu(void) {
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+
+
 // Callback para tratamento de eventos de teclado
 void Keyboard (unsigned char key, int x, int y)
 {
@@ -430,6 +437,8 @@ void Keyboard (unsigned char key, int x, int y)
 
 void SpecialKeyboard(int key, int x, int y)
 {
+  
+    
     if (current_state == NO_STATE)
     {
         //move mundo para esquerda
@@ -459,22 +468,46 @@ void SpecialKeyboard(int key, int x, int y)
         //move cabeça para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            
+            if (angle<75)
+            {
+                angle +=10;
+                tx = 1;
+                ty = 0;
+                tz = 0;
+            }
         }
         //move cabeça para esquerda
         else if (key == GLUT_KEY_LEFT)
         {
-        
-        }
+            if (angle>-75)
+            {
+                angle -=10;
+                tx = 0;
+                ty = 1;
+                tz = 0;
+            }
+                    }
         //move cabeça para cima
         else if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<40)
+            {
+                angle +=10;
+                tx = 0;
+                ty = 1;
+                tz = 0;
+            }
         }
         //move cabeça para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-40)
+            {
+                angle -=10;
+                tx = 0;
+                ty = 1;
+                tz = 0;
+            }
         }
     }
     
