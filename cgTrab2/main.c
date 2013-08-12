@@ -47,10 +47,10 @@ int ph = 0;  /* elevação do angulo de visão */
 int fov = 60;   /* campo de visão */
 //int fov = 30;   /* campo de visão */
 int asp = 1.0;    /* relação de aspecto */
-int angle = 0;
-int tx = 0;
-int ty = 0;
-int tz=0;
+float angle = 0;
+float tx = 0;
+float ty = 0;
+float tz=0;
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
     {255,  0,  0}, /* red    */
@@ -97,8 +97,7 @@ void drawKnuckle()
 void drawHead()
 {
     glPushMatrix();
-    glRotatef(-angle, 1.0, (GLfloat)angle/100.0, -(GLfloat)angle/100.0);
-    glRotatef(angle, 0, 1, 0);
+    glRotatef(angle, tx, ty, tz);
     glTranslatef (0.0, 1.45, 0.0);
     
     //chapéu
@@ -126,6 +125,7 @@ void drawTrunk()
     glPushMatrix();
     
     //tronco
+    glRotatef(angle, tx, ty, tz);
     glColor3ubv(v_colors[2]);
     glScalef(1.2, 1.7, 0.5);
     glutSolidCube(1);
@@ -136,7 +136,7 @@ void drawTrunk()
 void drawForeArm()
 {
     glPushMatrix();
-    
+        glRotatef(angle, tx, ty, tz);
     //ombro
     drawKnuckle();
     
@@ -180,7 +180,7 @@ void drawArm()
 void drawFullArm()
 {
     glPushMatrix();
-    
+    glRotatef(angle, tx, ty, tz);
     drawForeArm();
     drawArm();
     
@@ -190,7 +190,7 @@ void drawFullArm()
 void drawLeftArm()
 {
     glPushMatrix();
-    
+    //glRotatef(angle, tx, ty, tz);
     glTranslatef(-0.75, 0.4, 0.0);
     glRotatef(-15.0, 0.0, 0.0, 1.0);
     drawFullArm();
@@ -468,18 +468,18 @@ void SpecialKeyboard(int key, int x, int y)
         //move cabeça para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            if (angle<75)
+            if (angle<55)//75
             {
                 angle +=10;
-                tx = 1;
-                ty = 0;
+                tx = 0;
+                ty = 1;
                 tz = 0;
             }
         }
         //move cabeça para esquerda
         else if (key == GLUT_KEY_LEFT)
         {
-            if (angle>-75)
+            if (angle>-55)//75
             {
                 angle -=10;
                 tx = 0;
@@ -490,22 +490,22 @@ void SpecialKeyboard(int key, int x, int y)
         //move cabeça para cima
         else if (key == GLUT_KEY_UP)
         {
-            if (angle<40)
+            if (angle<10)//40
             {
                 angle +=10;
-                tx = 0;
-                ty = 1;
+                tx = 1;
+                ty = 0;
                 tz = 0;
             }
         }
         //move cabeça para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-40)
+            if (angle>-10)//40
             {
                 angle -=10;
-                tx = 0;
-                ty = 1;
+                tx = 1;
+                ty = 0;
                 tz = 0;
             }
         }
@@ -516,12 +516,24 @@ void SpecialKeyboard(int key, int x, int y)
         //move tronco para cima
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=10;
+                tx = 1;
+                ty = 0;
+                tz = 0;
+            }
         }
         //move tronco para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=10;
+                tx = 1;
+                ty = 0;
+                tz = 0;
+            }
         }
     }
     
@@ -530,7 +542,14 @@ void SpecialKeyboard(int key, int x, int y)
         //move braço esquedo para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 1;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move braço esquerdo para esquerda
         else if (key == GLUT_KEY_LEFT)
