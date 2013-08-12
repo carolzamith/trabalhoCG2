@@ -135,8 +135,10 @@ void drawTrunk()
 
 void drawForeArm()
 {
+   
+     glRotatef(angle, tx, ty, tz);
     glPushMatrix();
-        glRotatef(angle, tx, ty, tz);
+   
     //ombro
     drawKnuckle();
     
@@ -180,7 +182,6 @@ void drawArm()
 void drawFullArm()
 {
     glPushMatrix();
-    glRotatef(angle, tx, ty, tz);
     drawForeArm();
     drawArm();
     
@@ -190,7 +191,7 @@ void drawFullArm()
 void drawLeftArm()
 {
     glPushMatrix();
-    //glRotatef(angle, tx, ty, tz);
+    glRotatef(angle, tx, ty, tz);
     glTranslatef(-0.75, 0.4, 0.0);
     glRotatef(-15.0, 0.0, 0.0, 1.0);
     drawFullArm();
@@ -545,7 +546,7 @@ void SpecialKeyboard(int key, int x, int y)
             if (angle<30)
             {
                 angle +=5;
-                tx = 1;
+                tx = 0;
                 ty = 0;
                 tz = 1;
             }
@@ -555,15 +556,38 @@ void SpecialKeyboard(int key, int x, int y)
         else if (key == GLUT_KEY_LEFT)
         {
             
+            if (angle>-10)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
+            
         }
         //move braço esquerdo para frente
         else if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 1;
+                ty = 0;
+                tz = 0;
+            }
         }
         //move braço esquerdo para trás
         else if (key == GLUT_KEY_DOWN)
         {
+            
+            if (angle>-10)
+            {
+                angle -=5;
+                tx = 1;
+                ty = 0;
+                tz = 0;
+            }
             
         }
     }
@@ -573,22 +597,53 @@ void SpecialKeyboard(int key, int x, int y)
         //move braço direito para direita
         if (key == GLUT_KEY_RIGHT)
         {
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
         //move braço direito para esquerda
         else if (key == GLUT_KEY_LEFT)
         {
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
         //move braço direito para frente
         else if (key == GLUT_KEY_UP)
         {
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
         //move braço direito para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
     }
     
@@ -597,12 +652,26 @@ void SpecialKeyboard(int key, int x, int y)
         //move antebraço esquerdo para frente
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move antebraço esquerdo para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
     }
     
@@ -611,12 +680,26 @@ void SpecialKeyboard(int key, int x, int y)
         //move antebraço direito para frente
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move antebraço direito para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
     }
     
@@ -625,11 +708,26 @@ void SpecialKeyboard(int key, int x, int y)
         //move perna esquerda para frente
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move perna esquerda para trás
         else if (key == GLUT_KEY_DOWN)
         {
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
     }
@@ -639,11 +737,26 @@ void SpecialKeyboard(int key, int x, int y)
         //move perna direita para frente
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move perna direita para trás
         else if (key == GLUT_KEY_DOWN)
         {
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
     }
@@ -653,12 +766,27 @@ void SpecialKeyboard(int key, int x, int y)
         //move coxa esquerda para frente
         if (key == GLUT_KEY_UP)
         {
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
             
         }
         //move coxa esquerda para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
     }
     
@@ -667,12 +795,26 @@ void SpecialKeyboard(int key, int x, int y)
         //move coxa direita para frente
         if (key == GLUT_KEY_UP)
         {
-            
+            if (angle<30)
+            {
+                angle +=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
         //move coxa direita para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            
+            if (angle>-30)
+            {
+                angle -=5;
+                tx = 0;
+                ty = 0;
+                tz = 1;
+            }
+
         }
     }
     
