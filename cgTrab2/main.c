@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "print.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -60,31 +59,7 @@ GLubyte v_colors[][3]   = {
     {  0,255,255}};/* cyan   */
 
 
-/* Desenha os eixos */
-void drawAxes()
-{
-    if (toggleAxes) {
-        /*  Tamanho dos eixos */
-        double len = 2.0;
-        glColor3ubv(v_colors[0]);
-        glBegin(GL_LINES);
-        glVertex3d(0,0,0);
-        glVertex3d(len,0,0);
-        glVertex3d(0,0,0);
-        glVertex3d(0,len,0);
-        glVertex3d(0,0,0);
-        glVertex3d(0,0,len);
-        glEnd();
-        /*  Labels */
-        glRasterPos3d(len,0,0);
-        print("X");
-        glRasterPos3d(0,len,0);
-        print("Y");
-        glRasterPos3d(0,0,len);
-        print("Z");
-    }
-}
-
+/* Projeção */
 void project()
 {
     glMatrixMode(GL_PROJECTION);
@@ -96,6 +71,7 @@ void project()
     glLoadIdentity();
 }
 
+/* Camera */
 void setEye()
 {
     double Ex = -10*Sin(th)*Cos(ph);
@@ -331,7 +307,6 @@ void Display(void)
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-    drawAxes();
 //    setEye();
     
     glTranslatef (0.0, 0.0, -8.0);
@@ -447,14 +422,7 @@ void Keyboard (unsigned char key, int x, int y)
 {
     //sair
     if (key == 27)
-    {
         exit(EXIT_SUCCESS);
-    }
-    //exibir eixos
-    else if (key == 'a' || key == 'A')
-    {
-        toggleAxes = 1 - toggleAxes;
-    }
     
     project();
     glutPostRedisplay();
