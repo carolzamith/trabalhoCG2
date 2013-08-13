@@ -44,10 +44,10 @@ int menu_option;
 int toggleAxes = 0;   /* eixos on/off */
 int th = 0;  /* azimute do angulo de visão */
 int ph = 0;  /* elevação do angulo de visão */
-int fov = 60;   /* campo de visão */
-//int fov = 30;   /* campo de visão */
+int fov = 30;   /* campo de visão */
 int asp = 1.0;    /* relação de aspecto */
-/*angulo, tx, ty, tz*/
+
+float a_world [2] = {0, 0};
 float a_head [4] = {0, 0, 0, 0};
 float a_trunk [2] = {0, 0};
 float a_larm [4] = {0, 0, 0, 0};
@@ -58,9 +58,6 @@ float a_lleg [2] = {0, 0};
 float a_rleg [2] = {0, 0};
 float a_lthigh [2] = {0, 0};
 float a_rthigh [2] = {0, 0};
-float tx = 0;
-float ty = 0;
-float tz = 0;
 
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
@@ -350,11 +347,11 @@ void Display(void)
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-//    setEye();
+    setEye();
     
     glTranslatef (0.0, 0.0, -8.0);
-    glRotated(ph, 1, 0, 0);
-    glRotated(th, 0, 1, 0);
+    glRotated(a_world[0], 1, 0, 0);
+    glRotated(a_world[1], 0, 1, 0);
     
     drawRobot();
     
@@ -481,22 +478,22 @@ void SpecialKeyboard(int key, int x, int y)
         //move mundo para esquerda
         if (key == GLUT_KEY_LEFT)
         {
-            th -= 5;
+            a_world[1] -= 5;
         }
         //move mundo para direita
         else if (key == GLUT_KEY_RIGHT)
         {
-            th += 5;
+            a_world[1] += 5;
         }
         //move mundo para cima
         else if (key == GLUT_KEY_UP)
         {
-             ph += 5;
+            a_world[0] += 5;
         }
         //move mundo para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-             ph -= 5;
+             a_world[0] -= 5;
         }
     }
     

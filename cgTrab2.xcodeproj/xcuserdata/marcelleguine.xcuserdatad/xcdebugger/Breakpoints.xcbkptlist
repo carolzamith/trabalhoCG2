@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "cgTrab2/main.c"
-         timestampString = "398052810.536121"
+         timestampString = "398053317.925905"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "477"
-         endingLineNumber = "477"
+         startingLineNumber = "475"
+         endingLineNumber = "475"
          landmarkName = "SpecialKeyboard()"
          landmarkType = "7">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "cgTrab2/main.c"
-         timestampString = "398052810.536121"
+         timestampString = "398053317.925905"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "611"
-         endingLineNumber = "611"
+         startingLineNumber = "609"
+         endingLineNumber = "609"
          landmarkName = "SpecialKeyboard()"
          landmarkType = "7">
       </FileBreakpoint>
@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "cgTrab2/main.c"
-         timestampString = "398052810.536121"
+         timestampString = "398053317.925905"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "565"
-         endingLineNumber = "565"
+         startingLineNumber = "563"
+         endingLineNumber = "563"
          landmarkName = "SpecialKeyboard()"
          landmarkType = "7">
       </FileBreakpoint>
