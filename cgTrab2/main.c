@@ -47,10 +47,21 @@ int ph = 0;  /* elevação do angulo de visão */
 int fov = 60;   /* campo de visão */
 //int fov = 30;   /* campo de visão */
 int asp = 1.0;    /* relação de aspecto */
-float angle = 0;
+/*angulo, tx, ty, tz*/
+float a_head [4] = {0, 0, 0, 0};
+float a_trunk [2] = {0, 0};
+float a_larm [4] = {0, 0, 0, 0};
+float a_rarm [4] = {0, 0, 0, 0};
+float a_lforearm [2] = {0, 0};
+float a_rforearm [2] = {0, 0};
+float a_lleg [2] = {0, 0};
+float a_rleg [2] = {0, 0};
+float a_lthigh [2] = {0, 0};
+float a_rthigh [2] = {0, 0};
 float tx = 0;
 float ty = 0;
-float tz=0;
+float tz = 0;
+
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
     {255,  0,  0}, /* red    */
@@ -97,7 +108,10 @@ void drawKnuckle()
 void drawHead()
 {
     glPushMatrix();
-    glRotatef(angle, tx, ty, tz);
+    
+    glRotatef(a_head[0], a_head[2], 0, 0);
+    glRotatef(a_head[1], 0, a_head[3], 0);
+    
     glTranslatef (0.0, 1.45, 0.0);
     
     //chapéu
@@ -125,7 +139,6 @@ void drawTrunk()
     glPushMatrix();
     
     //tronco
-    glRotatef(angle, tx, ty, tz);
     glColor3ubv(v_colors[2]);
     glScalef(1.2, 1.7, 0.5);
     glutSolidCube(1);
@@ -135,12 +148,7 @@ void drawTrunk()
 
 void drawForeArm()
 {
-   
-     glRotatef(angle, tx, ty, tz);
     glPushMatrix();
-   
-    //ombro
-    drawKnuckle();
     
     //antebraço
     glColor3ubv(v_colors[2]);
@@ -156,10 +164,6 @@ void drawForeArm()
 void drawArm()
 {    
     glPushMatrix();
-    
-    //cotovelo
-    glTranslatef(0.0, -1.1, 0.0);
-    drawKnuckle();
     
     //braço
     glColor3ubv(v_colors[2]);
@@ -179,33 +183,54 @@ void drawArm()
     glPopMatrix();
 }
 
-void drawFullArm()
-{
-    glPushMatrix();
-    drawForeArm();
-    drawArm();
-    
-    glPopMatrix();
-}
-
 void drawLeftArm()
 {
-    glPushMatrix();
-    glRotatef(angle, tx, ty, tz);
     glTranslatef(-0.75, 0.4, 0.0);
     glRotatef(-15.0, 0.0, 0.0, 1.0);
-    drawFullArm();
     
-    glPopMatrix();
+    glPushMatrix();
+    
+    //ombro
+    drawKnuckle();
+    
+    glRotatef(a_larm[0], a_larm[2], 0, 0);
+    glRotatef(a_larm[1], 0, 0, a_larm[3]);
+    
+    drawForeArm();
+    
+    //cotovelo
+    glTranslatef(0.0, -1.1, 0.0);
+    drawKnuckle();
+    
+    glRotatef(a_lforearm[0], a_lforearm[1], 0, 0);
+    
+    drawArm();
+    
+    glPopMatrix();    
 }
 
 void drawRightArm()
-{
+{    
+    glTranslatef(1.4, 0.4, 0.0);
+    glRotatef(30.0, 0.0, 0.0, 1.0);
+    
     glPushMatrix();
     
-    glTranslatef(0.75, 0.4, 0.0);
-    glRotatef(15.0, 0.0, 0.0, 1.0);
-    drawFullArm();
+    //ombro
+    drawKnuckle();
+    
+    glRotatef(a_rarm[0], a_rarm[2], 0, 0);
+    glRotatef(a_rarm[1], 0, 0, a_rarm[3]);
+    
+    drawForeArm();
+    
+    //cotovelo
+    glTranslatef(0.0, -1.1, 0.0);
+    drawKnuckle();
+    
+    glRotatef(a_rforearm[0], a_rforearm[1], 0, 0);
+    
+    drawArm();
     
     glPopMatrix();
 }
@@ -213,9 +238,6 @@ void drawRightArm()
 void drawThigh()
 {
     glPushMatrix();
-    
-    //anti coxa
-    drawKnuckle();
     
     //coxa
     glColor3ubv(v_colors[2]);
@@ -231,10 +253,6 @@ void drawThigh()
 void drawLeg()
 {
     glPushMatrix();
-    
-    //joelho
-    glTranslatef(0.0, -1.3, 0.0);
-    drawKnuckle();
     
     //panturrilha
     glColor3ubv(v_colors[2]);
@@ -253,32 +271,49 @@ void drawLeg()
     glPopMatrix();
 }
 
-void drawFullLeg()
-{    
-    glPushMatrix();
-    
-    drawThigh();
-    drawLeg();
-    
-    glPopMatrix();
-}
-
 void drawLeftLeg()
 {
+    glTranslatef(-0.3, -1.0, 0.0);
     glPushMatrix();
     
-    glTranslatef(-0.3, -1.0, 0.0);
-    drawFullLeg();
+    //anti coxa
+    drawKnuckle();
+    
+    glRotatef(a_lleg[0], a_lleg[1], 0, 0);
+    
+    drawThigh();
+    
+    //joelho
+    glTranslatef(0.0, -1.3, 0.0);
+    drawKnuckle();
+    
+    glRotatef(a_lthigh[0], a_lthigh[1], 0, 0);
+    
+    drawLeg();
     
     glPopMatrix();
 }
 
 void drawRightLeg()
 {
+    glTranslatef(0.65, 0.0, 0.0);
+
     glPushMatrix();
     
-    glTranslatef(0.3, -1.0, 0.0);
-    drawFullLeg();
+    //anti coxa
+    drawKnuckle();
+    
+    glRotatef(a_rleg[0], a_rleg[1], 0, 0);
+    
+    drawThigh();
+    
+    //joelho
+    glTranslatef(0.0, -1.3, 0.0);
+    drawKnuckle();
+    
+    glRotatef(a_rthigh[0], a_rthigh[1], 0, 0);
+    
+    drawLeg();
     
     glPopMatrix();
 }
@@ -287,6 +322,8 @@ void fullTrunk()
 {
     
     glPushMatrix();
+    
+    glRotatef(a_trunk[0], a_trunk[1], 0, 0);
     
     drawTrunk();
     drawHead();
@@ -338,62 +375,62 @@ void menu(int menu_option) {
     
 	switch(menu_option) {
             
-            /* Movimentar cabeça */
+        /* Movimentar cabeça */
         case 1:
             current_state = M_HEAD;
             break;
             
-            /* Movimentar tronco */
+        /* Movimentar tronco */
         case 2:
             current_state = M_TRUNK;
             break;
             
-            /* Movimentar braço esquerdo */
+        /* Movimentar braço esquerdo */
         case 3:
             current_state = M_LEFT_ARM;
             break;
             
-            /* Movimentar braço direito */
+        /* Movimentar braço direito */
         case 4:
             current_state = M_RIGHT_ARM;
             break;
             
-            /* Movimentar antebraço esquerdo */
+        /* Movimentar antebraço esquerdo */
         case 5:
             current_state = M_LEFT_FOREARM;
             break;
             
-            /* Movimentar antebraço direito */
+        /* Movimentar antebraço direito */
         case 6:
             current_state = M_RIGHT_FOREARM;
             break;
             
-            /* Movimentar perna esquerda */
+        /* Movimentar perna esquerda */
         case 7:
             current_state = M_LEFT_LEG;
             break;
             
-            /* Movimentar perna direita */
+        /* Movimentar perna direita */
         case 8:
             current_state = M_RIGHT_LEG;
             break;
             
-            /* Movimentar coxa esquerda */
+        /* Movimentar coxa esquerda */
         case 9:
             current_state = M_LEFT_THIGH;
             break;
             
-            /* Movimentar coxa direita */
+        /* Movimentar coxa direita */
         case 10:
             current_state = M_RIGHT_THIGH;
             break;
             
-            /* Movimentar mundo */
+        /* Movimentar mundo */
         case 11:
             current_state = NO_STATE;
             break;
             
-            /* Sair */
+        /* Sair */
         case 0:
             exit(EXIT_SUCCESS);
             
@@ -415,8 +452,8 @@ void createMenu(void) {
 	glutAddMenuEntry("Movimentar antebraço direito", 6);
 	glutAddMenuEntry("Movimentar perna esquerda", 7);
 	glutAddMenuEntry("Movimentar perna direita", 8);
-	glutAddMenuEntry("Movimentar coxa esquerda", 9);
-	glutAddMenuEntry("Movimentar coxa direita", 10);
+	glutAddMenuEntry("Movimentar panturrilha esquerda", 9);
+	glutAddMenuEntry("Movimentar panturrilha direita", 10);
 	glutAddMenuEntry("Movimentar mundo", 11);
 	glutAddMenuEntry("Sair", 0);
     
@@ -438,7 +475,6 @@ void Keyboard (unsigned char key, int x, int y)
 
 void SpecialKeyboard(int key, int x, int y)
 {
-  
     
     if (current_state == NO_STATE)
     {
@@ -469,45 +505,37 @@ void SpecialKeyboard(int key, int x, int y)
         //move cabeça para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            if (angle<55)//75
+            if (a_head[1] < 40)
             {
-                angle +=10;
-                tx = 0;
-                ty = 1;
-                tz = 0;
+                a_head[1] += 10;
+                a_head[3] = 1;
             }
         }
         //move cabeça para esquerda
         else if (key == GLUT_KEY_LEFT)
         {
-            if (angle>-55)//75
+            if (a_head[1] > -40)
             {
-                angle -=10;
-                tx = 0;
-                ty = 1;
-                tz = 0;
+                a_head[1] -= 10;
+                a_head[3] = 1;
             }
-                    }
+        }
         //move cabeça para cima
         else if (key == GLUT_KEY_UP)
         {
-            if (angle<10)//40
+            if (a_head[0] < 10)
             {
-                angle +=10;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_head[0] += 10;
+                a_head[2] = 1;
             }
         }
         //move cabeça para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-10)//40
+            if (a_head[0] > -10)
             {
-                angle -=10;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_head[0] -= 10;
+                a_head[2] = 1;
             }
         }
     }
@@ -517,23 +545,19 @@ void SpecialKeyboard(int key, int x, int y)
         //move tronco para cima
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_trunk[0] < 10)
             {
-                angle +=10;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_trunk[0] += 5;
+                a_trunk[1] = 1;
             }
         }
         //move tronco para baixo
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_trunk[0] > -10)
             {
-                angle -=10;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_trunk[0] -= 5;
+                a_trunk[1] = 1;
             }
         }
     }
@@ -543,12 +567,10 @@ void SpecialKeyboard(int key, int x, int y)
         //move braço esquedo para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            if (angle<30)
+            if (a_larm[1] < 15)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_larm[1] += 5;
+                a_larm[3] = 1;
             }
 
         }
@@ -556,12 +578,10 @@ void SpecialKeyboard(int key, int x, int y)
         else if (key == GLUT_KEY_LEFT)
         {
             
-            if (angle>-10)
+            if (a_larm[1] > -20)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_larm[1] -= 5;
+                a_larm[3] = 1;
             }
 
             
@@ -569,24 +589,20 @@ void SpecialKeyboard(int key, int x, int y)
         //move braço esquerdo para frente
         else if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_larm[0] < 30)
             {
-                angle +=5;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_larm[0] +=5;
+                a_larm[2] = 1;
             }
         }
         //move braço esquerdo para trás
         else if (key == GLUT_KEY_DOWN)
         {
             
-            if (angle>-10)
+            if (a_larm[0] > -10)
             {
-                angle -=5;
-                tx = 1;
-                ty = 0;
-                tz = 0;
+                a_larm[0] -= 5;
+                a_larm[2] = 1;
             }
             
         }
@@ -597,53 +613,44 @@ void SpecialKeyboard(int key, int x, int y)
         //move braço direito para direita
         if (key == GLUT_KEY_RIGHT)
         {
-            if (angle<30)
+            if (a_rarm[1] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rarm[1] += 5;
+                a_rarm[3] = 1;
             }
-
             
         }
         //move braço direito para esquerda
         else if (key == GLUT_KEY_LEFT)
         {
-            if (angle>-30)
+            
+            if (a_rarm[1] > -10)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rarm[1] -= 5;
+                a_rarm[3] = 1;
             }
-
+            
             
         }
         //move braço direito para frente
         else if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_rarm[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rarm[0] +=5;
+                a_rarm[2] = 1;
             }
-
-            
         }
         //move braço direito para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            
+            if (a_rarm[0] > -10)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rarm[0] -= 5;
+                a_rarm[2] = 1;
             }
-
+            
         }
     }
     
@@ -652,24 +659,20 @@ void SpecialKeyboard(int key, int x, int y)
         //move antebraço esquerdo para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_lforearm[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lforearm[0] += 5;
+                a_lforearm[1] = 1;
             }
 
         }
         //move antebraço esquerdo para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_lforearm[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lforearm[0] -= 5;
+                a_lforearm[1] = 1;
             }
 
         }
@@ -680,26 +683,22 @@ void SpecialKeyboard(int key, int x, int y)
         //move antebraço direito para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_rforearm[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rforearm[0] += 5;
+                a_rforearm[1] = 1;
             }
-
+            
         }
         //move antebraço direito para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_rforearm[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rforearm[0] -= 5;
+                a_rforearm[1] = 1;
             }
-
+            
         }
     }
     
@@ -708,24 +707,20 @@ void SpecialKeyboard(int key, int x, int y)
         //move perna esquerda para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_lleg[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lleg[0] += 5;
+                a_lleg[1] = 1;
             }
 
         }
         //move perna esquerda para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_lleg[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lleg[0] -= 5;
+                a_lleg[1] = 1;
             }
 
             
@@ -737,24 +732,20 @@ void SpecialKeyboard(int key, int x, int y)
         //move perna direita para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_rleg[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rleg[0] += 5;
+                a_rleg[1] = 1;
             }
 
         }
         //move perna direita para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_rleg[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rleg[0] -= 5;
+                a_rleg[1] = 1;
             }
 
             
@@ -766,12 +757,10 @@ void SpecialKeyboard(int key, int x, int y)
         //move coxa esquerda para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_lthigh[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lthigh[0] += 5;
+                a_lthigh[1] = 1;
             }
 
             
@@ -779,12 +768,10 @@ void SpecialKeyboard(int key, int x, int y)
         //move coxa esquerda para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_lthigh[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_lthigh[0] -= 5;
+                a_lthigh[1] = 1;
             }
 
         }
@@ -795,24 +782,20 @@ void SpecialKeyboard(int key, int x, int y)
         //move coxa direita para frente
         if (key == GLUT_KEY_UP)
         {
-            if (angle<30)
+            if (a_rthigh[0] < 30)
             {
-                angle +=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rthigh[0] += 5;
+                a_rthigh[1] = 1;
             }
 
         }
         //move coxa direita para trás
         else if (key == GLUT_KEY_DOWN)
         {
-            if (angle>-30)
+            if (a_rthigh[0] > -30)
             {
-                angle -=5;
-                tx = 0;
-                ty = 0;
-                tz = 1;
+                a_rthigh[0] -= 5;
+                a_rthigh[1] = 1;
             }
 
         }
