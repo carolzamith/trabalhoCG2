@@ -52,17 +52,17 @@ int ph = 0;  /* elevação do angulo de visão */
 int fov = 30;   /* campo de visão */
 int asp = 1.0;    /* relação de aspecto */
 
-float a_world [2] = {0, 0};
+float a_world [2] = {0, -35};
 float a_head [4] = {0, 0, 0, 0};
 float a_trunk [2] = {0, 0};
-float a_larm [4] = {0, 0, 0, 0};
+float a_larm [4] = {15, 0, 1, 0};
 float a_rarm [4] = {0, 0, 0, 0};
-float a_lforearm [2] = {0, 0};
+float a_lforearm [2] = {20, 1};
 float a_rforearm [2] = {0, 0};
-float a_lleg [2] = {0, 0};
-float a_rleg [2] = {0, 0};
-float a_lthigh [2] = {0, 0};
-float a_rthigh [2] = {0, 0};
+float a_lleg [2] = {20, 1};
+float a_rleg [2] = {-20, 1};
+float a_lthigh [2] = {20, 1};
+float a_rthigh [2] = {10, 1};
 
 
 tpImage * bobfront1, * bobfront2, * bobback,
@@ -121,7 +121,7 @@ void drawHead()
     glRotatef(a_head[0], a_head[2], 0, 0);
     glRotatef(a_head[1], 0, a_head[3], 0);
     
-    glTranslatef (0.0, 1.45, 0.0);
+    glTranslatef (0.0, 1.8, 0.0);
     
     //chapéu
     glColor3ubv(v_colors[6]);
@@ -132,13 +132,13 @@ void drawHead()
     glPopMatrix();
 
     //cabeça
-    glColor3ubv(v_colors[2]);
-    ColorCubeTexturized(texHandle);
+//    glColor3ubv(v_colors[2]);
     glScalef(0.8, 0.8, 0.8);
-    glutSolidCube(1);
+    ColorCubeTexturized(texHandle);
+//    glutSolidCube(1);
     
     //pescoço
-    glTranslatef(0.0, -0.65, 0.0);
+    glTranslatef(0.0, -1.1, 0.0);
     drawKnuckle();
     
     glPopMatrix();
@@ -367,16 +367,7 @@ void Display(void)
     glRotated(a_world[1], 0, 1, 0);
     
     drawRobot();
-    
-    //chão
-    glColor3f(0.0, 0.5, 0.0);
-	glPushMatrix();
-    glRotated(90, 1, 0, 0);
-    glTranslatef(0.0, 0.0, 3.8);
-    glScalef(1.5, 1.5, 0.3);
-    glutSolidSphere(0.75, 20, 20);
-	glPopMatrix();
-    
+        
     glFlush();
     glutSwapBuffers();
 }
