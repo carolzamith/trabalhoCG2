@@ -7,17 +7,22 @@
 //
 
 #ifdef WIN32
-#include <windows.h>
+    #include <windows.h>
 #endif
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 #ifdef __APPLE__
-#include <GLUT/glut.h>
+    #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+    #include <OpenGL/glut.h>
 #endif
+
+
+#include "primitives.h"
+#include "image.h"
 
 #define PI 3.1415926535898
 #define Cos(th) cos(PI/180*(th))
@@ -58,6 +63,13 @@ float a_lleg [2] = {0, 0};
 float a_rleg [2] = {0, 0};
 float a_lthigh [2] = {0, 0};
 float a_rthigh [2] = {0, 0};
+
+
+tpImage * bobfront1, * bobfront2, * bobback,
+* bobleft,   * bobright,
+* bobtop,    * bobbottom;
+
+GLuint    texHandle[6];
 
 GLubyte v_colors[][3]   = {
     {  0,  0,  0}, /* black  */
@@ -121,6 +133,7 @@ void drawHead()
 
     //cabeça
     glColor3ubv(v_colors[2]);
+    ColorCubeTexturized(texHandle);
     glScalef(0.8, 0.8, 0.8);
     glutSolidCube(1);
     
@@ -831,6 +844,24 @@ void Init(void)
     /* interpolação com correção de perspectiva e não utilizar */
     /* aproximações                                            */
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    
+    
+    bobfront1    = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobfront1.ppm");
+    bobfront2    = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobfront2.ppm");
+    bobback      = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobback.ppm");
+    bobleft      = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobleft.ppm");
+    bobright     = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobright.ppm");
+    bobtop       = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobtop.ppm");
+    bobbottom    = ReadPpmImage2RGBA("/Users/Carol/Documents/UFF/UFF-Computação/Comp.Graf/TrabalhoCGPARTE2/trabalhoCG2/cgTrab2/bobbottom.ppm");
+    
+    texHandle[0] = CreateTexture(bobback,    GL_LINEAR, GL_LINEAR);
+    texHandle[1] = CreateTexture(bobright,   GL_LINEAR, GL_LINEAR);
+    texHandle[2] = CreateTexture(bobtop,     GL_LINEAR, GL_LINEAR);
+    texHandle[3] = CreateTexture(bobleft,    GL_LINEAR, GL_LINEAR);
+    texHandle[4] = CreateTexture(bobbottom,  GL_LINEAR, GL_LINEAR);
+    texHandle[5] = CreateTexture(bobfront1,  GL_LINEAR, GL_LINEAR);
+    texHandle[6] = CreateTexture(bobfront2,  GL_LINEAR, GL_LINEAR);
+    
     
     /* Configura a iluminação                                  */
     InitLighting();
