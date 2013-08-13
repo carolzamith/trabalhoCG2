@@ -11,6 +11,8 @@
 		9F9D96C717B7EF9400791E9A /* cgTrab2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9F9D96C617B7EF9400791E9A /* cgTrab2.1 */; };
 		9F9D96CE17B7EF9F00791E9A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9D96CD17B7EF9F00791E9A /* OpenGL.framework */; };
 		9F9D96D017B7EFA300791E9A /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9D96CF17B7EFA300791E9A /* GLUT.framework */; };
+		F16549FF17B9E4EA00985341 /* image.c in Sources */ = {isa = PBXBuildFile; fileRef = F16549FD17B9E4EA00985341 /* image.c */; };
+		F1654A0817B9E8CE00985341 /* primitives.c in Sources */ = {isa = PBXBuildFile; fileRef = F1654A0617B9E8CE00985341 /* primitives.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +34,21 @@
 		9F9D96C617B7EF9400791E9A /* cgTrab2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = cgTrab2.1; sourceTree = "<group>"; };
 		9F9D96CD17B7EF9F00791E9A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		9F9D96CF17B7EFA300791E9A /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		F16549FC17B9E3AB00985341 /* bobfront1.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobfront1.ppm; sourceTree = "<group>"; };
+		F16549FD17B9E4EA00985341 /* image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = image.c; sourceTree = "<group>"; };
+		F16549FE17B9E4EA00985341 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image.h; sourceTree = "<group>"; };
+		F1654A0017B9E6DF00985341 /* bobback.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobback.ppm; sourceTree = "<group>"; };
+		F1654A0117B9E6DF00985341 /* bobbottom.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobbottom.ppm; sourceTree = "<group>"; };
+		F1654A0217B9E6DF00985341 /* bobfront2.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobfront2.ppm; sourceTree = "<group>"; };
+		F1654A0317B9E6DF00985341 /* bobleft.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobleft.ppm; sourceTree = "<group>"; };
+		F1654A0417B9E6DF00985341 /* bobright.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobright.ppm; sourceTree = "<group>"; };
+		F1654A0517B9E6DF00985341 /* bobtop.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobtop.ppm; sourceTree = "<group>"; };
+		F1654A0617B9E8CE00985341 /* primitives.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = primitives.c; sourceTree = "<group>"; };
+		F1654A0717B9E8CE00985341 /* primitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = primitives.h; sourceTree = "<group>"; };
+		F18FC3A117B9D9230045C450 /* primitives.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = primitives.c; path = "../../../../../../../Downloads/exemplo10 2/primitives.c"; sourceTree = "<group>"; };
+		F18FC3A217B9D9230045C450 /* primitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = primitives.h; path = "../../../../../../../Downloads/exemplo10 2/primitives.h"; sourceTree = "<group>"; };
+		F18FC3A717B9DA990045C450 /* image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = image.c; path = "../../../../../../../Downloads/exemplo10 2/image.c"; sourceTree = "<group>"; };
+		F18FC3A817B9DA990045C450 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = image.h; path = "../../../../../../../Downloads/exemplo10 2/image.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +85,21 @@
 		9F9D96C317B7EF9400791E9A /* cgTrab2 */ = {
 			isa = PBXGroup;
 			children = (
+				F1654A0617B9E8CE00985341 /* primitives.c */,
+				F1654A0717B9E8CE00985341 /* primitives.h */,
+				F1654A0017B9E6DF00985341 /* bobback.ppm */,
+				F1654A0117B9E6DF00985341 /* bobbottom.ppm */,
+				F1654A0217B9E6DF00985341 /* bobfront2.ppm */,
+				F1654A0317B9E6DF00985341 /* bobleft.ppm */,
+				F1654A0417B9E6DF00985341 /* bobright.ppm */,
+				F1654A0517B9E6DF00985341 /* bobtop.ppm */,
+				F16549FD17B9E4EA00985341 /* image.c */,
+				F16549FE17B9E4EA00985341 /* image.h */,
+				F16549FC17B9E3AB00985341 /* bobfront1.ppm */,
+				F18FC3A717B9DA990045C450 /* image.c */,
+				F18FC3A817B9DA990045C450 /* image.h */,
+				F18FC3A117B9D9230045C450 /* primitives.c */,
+				F18FC3A217B9D9230045C450 /* primitives.h */,
 				9F9D96C417B7EF9400791E9A /* main.c */,
 				9F9D96C617B7EF9400791E9A /* cgTrab2.1 */,
 			);
@@ -126,6 +158,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F9D96C517B7EF9400791E9A /* main.c in Sources */,
+				F16549FF17B9E4EA00985341 /* image.c in Sources */,
+				F1654A0817B9E8CE00985341 /* primitives.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
