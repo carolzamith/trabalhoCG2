@@ -45,10 +45,6 @@
 		F1654A0517B9E6DF00985341 /* bobtop.ppm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bobtop.ppm; sourceTree = "<group>"; };
 		F1654A0617B9E8CE00985341 /* primitives.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = primitives.c; sourceTree = "<group>"; };
 		F1654A0717B9E8CE00985341 /* primitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = primitives.h; sourceTree = "<group>"; };
-		F18FC3A117B9D9230045C450 /* primitives.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = primitives.c; path = "../../../../../../../Downloads/exemplo10 2/primitives.c"; sourceTree = "<group>"; };
-		F18FC3A217B9D9230045C450 /* primitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = primitives.h; path = "../../../../../../../Downloads/exemplo10 2/primitives.h"; sourceTree = "<group>"; };
-		F18FC3A717B9DA990045C450 /* image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = image.c; path = "../../../../../../../Downloads/exemplo10 2/image.c"; sourceTree = "<group>"; };
-		F18FC3A817B9DA990045C450 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = image.h; path = "../../../../../../../Downloads/exemplo10 2/image.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,10 +92,6 @@
 				F16549FD17B9E4EA00985341 /* image.c */,
 				F16549FE17B9E4EA00985341 /* image.h */,
 				F16549FC17B9E3AB00985341 /* bobfront1.ppm */,
-				F18FC3A717B9DA990045C450 /* image.c */,
-				F18FC3A817B9DA990045C450 /* image.h */,
-				F18FC3A117B9D9230045C450 /* primitives.c */,
-				F18FC3A217B9D9230045C450 /* primitives.h */,
 				9F9D96C417B7EF9400791E9A /* main.c */,
 				9F9D96C617B7EF9400791E9A /* cgTrab2.1 */,
 			);

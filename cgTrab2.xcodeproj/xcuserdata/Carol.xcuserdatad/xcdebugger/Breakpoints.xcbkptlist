@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "cgTrab2/main.c"
-         timestampString = "398089999.057314"
+         timestampString = "398135107.458016"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "260"
-         endingLineNumber = "260"
-         landmarkName = "drawThigh()"
+         startingLineNumber = "140"
+         endingLineNumber = "140"
+         landmarkName = "project()"
          landmarkType = "7">
       </FileBreakpoint>
    </FileBreakpoints>

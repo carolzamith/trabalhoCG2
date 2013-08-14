@@ -16,6 +16,7 @@
 #endif
 
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdarg.h>
@@ -61,9 +62,10 @@ enum STATE {
     M_LEFT_LEG,
     M_RIGHT_LEG,
     M_LEFT_THIGH,
-    M_RIGHT_THIGH
-
+    M_RIGHT_THIGH,
 } current_state = NO_STATE;
+
+int ANIMATION = 0;
 
 int menu_option;
 
@@ -85,6 +87,8 @@ float a_rleg [2] = {-20, 1};
 float a_lthigh [2] = {20, 1};
 float a_rthigh [2] = {10, 1};
 
+int keys[4] = {GLUT_KEY_RIGHT, GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_DOWN};
+
 #define FORE_ARM_ANGLE_FRONT 30
 #define FORE_ARM_ANGLE_BACK 120
 
@@ -95,7 +99,7 @@ float a_rthigh [2] = {10, 1};
 #define ARM_ANGLE_BACK 140
 
 #define TIGHT_ANGLE_FRONT 30
-#define TIGHT_ANGLE_BACK 120
+#define TIGHT_ANGLE_BACK 100
 
 #define TRUNK_ANGLE_BACK 40
 #define TRUNK_ANGLE_FRONT 80
@@ -187,7 +191,7 @@ void drawValues()
 {
     if (toggleValues) {
         glColor3f(0.8,0.8,0.8);
-        printAt(5,5,"Angulo de visao (th, ph) =(%d, %d)", th, ph);
+        printAt(5,5,"Aumente e Diminua o Zoom com d e D, respectivamente ");
         printAt(5,25,"Modo de projecao =(%s)", toggleMode ? "Perspectiva" : "Ortogonal");
     }
 }
@@ -372,7 +376,7 @@ void drawLeg()
 
 void drawLeftLeg()
 {
-    glTranslatef(-0.3, -1.0, 0.0);
+    glTranslatef(-1.3, -1.2, 0.0);
     glPushMatrix();
     
     //antecoxa
@@ -395,7 +399,7 @@ void drawLeftLeg()
 
 void drawRightLeg()
 {
-    glTranslatef(0.65, 0.0, 0.0);
+    glTranslatef(0.65, -0.15, 0.0);
 
     glPushMatrix();
     
@@ -427,7 +431,8 @@ void fullTrunk()
     drawHead();
     drawLeftArm();
     drawRightArm();
- 
+    drawLeftLeg();
+    drawRightLeg();
     glPopMatrix();
 }
 
@@ -438,8 +443,6 @@ void drawRobot()
     fullTrunk();
     drawAxes();
     drawValues();
-    drawLeftLeg();
-    drawRightLeg();
   
     
     glPopMatrix();
@@ -465,96 +468,8 @@ void Display(void)
     glutSwapBuffers();
 }
 
-void menu(int menu_option) {
-    
-	switch(menu_option) {
-            
-        /* Movimentar cabeça */
-        case 1:
-            current_state = M_HEAD;
-            break;
-            
-        /* Movimentar tronco */
-        case 2:
-            current_state = M_TRUNK;
-            break;
-            
-        /* Movimentar braço esquerdo */
-        case 3:
-            current_state = M_LEFT_ARM;
-            break;
-            
-        /* Movimentar braço direito */
-        case 4:
-            current_state = M_RIGHT_ARM;
-            break;
-            
-        /* Movimentar antebraço esquerdo */
-        case 5:
-            current_state = M_LEFT_FOREARM;
-            break;
-            
-        /* Movimentar antebraço direito */
-        case 6:
-            current_state = M_RIGHT_FOREARM;
-            break;
-            
-        /* Movimentar perna esquerda */
-        case 7:
-            current_state = M_LEFT_LEG;
-            break;
-            
-        /* Movimentar perna direita */
-        case 8:
-            current_state = M_RIGHT_LEG;
-            break;
-            
-        /* Movimentar coxa esquerda */
-        case 9:
-            current_state = M_LEFT_THIGH;
-            break;
-            
-        /* Movimentar coxa direita */
-        case 10:
-            current_state = M_RIGHT_THIGH;
-            break;
-            
-        /* Movimentar mundo */
-        case 11:
-            current_state = NO_STATE;
-            break;
-            
-        /* Sair */
-        case 0:
-            exit(EXIT_SUCCESS);
-            
-        default:
-            exit(EXIT_SUCCESS);
-            
-	}
-    
-	glutPostRedisplay();
-}
 
-void createMenu(void) {
-	menu_option = glutCreateMenu(menu);
-  
-	glutAddMenuEntry("Movimentar cabeça", 1);
-	glutAddMenuEntry("Movimentar tronco", 2);
-	glutAddMenuEntry("Movimentar braço esquerdo", 3);
-	glutAddMenuEntry("Movimentar braço direito", 4);
-	glutAddMenuEntry("Movimentar antebraço esquerdo", 5);
-	glutAddMenuEntry("Movimentar antebraço direito", 6);
-	glutAddMenuEntry("Movimentar perna esquerda", 7);
-	glutAddMenuEntry("Movimentar perna direita", 8);
-	glutAddMenuEntry("Movimentar panturrilha esquerda", 9);
-	glutAddMenuEntry("Movimentar panturrilha direita", 10);
-	glutAddMenuEntry("Movimentar mundo", 11);
-	glutAddMenuEntry("Sair", 0);
-    
-    
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-}
+
 
 
 // Callback para tratamento de eventos de teclado
@@ -623,7 +538,8 @@ void move_left_arm(int key)
 
 void move_right_arm(int key)
 {
-   move_arm(a_rarm, key);}
+   move_arm(a_rarm, key);
+}
 
 void move_fore_arm(float forearm[2], int key)
 {
@@ -808,62 +724,199 @@ void move_trunk(int key)
 }
 
 
-void SpecialKeyboard(int key, int x, int y)
+
+
+void do_animation(int state, int key)
 {
-    
-    if (current_state == NO_STATE)
+    if (state == NO_STATE)
     {
         move_world(key);
     }
     
-    else if (current_state == M_HEAD)
+    else if (state == M_HEAD)
     {
         move_head(key);
     }
     
-    else if ( current_state == M_TRUNK)
+    else if ( state == M_TRUNK)
     {
         move_trunk(key);
     }
-    else if(current_state == M_LEFT_ARM)
+    else if(state == M_LEFT_ARM)
     {
         move_left_arm(key);
     }
     
-    else if (current_state == M_RIGHT_ARM)
+    else if (state == M_RIGHT_ARM)
     {
         move_right_arm(key);
     }
     
-    else if (current_state == M_LEFT_FOREARM)
+    else if (state == M_LEFT_FOREARM)
     {
         move_left_fore_arm(key);
     }
     
-    else if (current_state == M_RIGHT_FOREARM)
+    else if (state == M_RIGHT_FOREARM)
     {
         move_right_fore_arm(key);
     }
     
-    else if (current_state == M_LEFT_LEG)
+    else if (state == M_LEFT_LEG)
     {
         move_left_leg(key);
     }
     
-    else if (current_state == M_RIGHT_LEG)
+    else if (state == M_RIGHT_LEG)
     {
         move_right_leg(key);
     }
     
-    else if (current_state == M_LEFT_THIGH)
+    else if (state == M_LEFT_THIGH)
     {
         move_left_tigh(key);
     }
     
-    else if (current_state == M_RIGHT_THIGH)
+    else if (state == M_RIGHT_THIGH)
     {
         move_right_tigh(key);
     }
+
+}
+
+void TimerFunction( int value ){
+    
+    int time_span = value % 60;
+    if(time_span < 30) {
+        for(int i = M_HEAD; i <= M_RIGHT_THIGH; i++) {
+            do_animation( i, keys[2]);
+            if(i == M_HEAD){
+                do_animation( i, keys[0]);
+            }
+        }
+    }
+    else {
+        for(int i = M_HEAD; i <= M_RIGHT_THIGH; i++) {
+            do_animation( i, keys[3]);
+            if(i == M_HEAD){
+                do_animation( i, keys[1]);
+            }
+        }
+    }
+    glutPostRedisplay();
+    if (value > 200000) value = 0;  
+    if(ANIMATION){
+        glutTimerFunc( 30, TimerFunction, value+1);
+    }
+    
+}
+
+
+void menu(int menu_option) {
+    
+    ANIMATION = 0;
+    
+	switch(menu_option) {
+            
+            /* Movimentar cabeça */
+        case 1:
+            current_state = M_HEAD;
+            break;
+            
+            /* Movimentar tronco */
+        case 2:
+            current_state = M_TRUNK;
+            break;
+            
+            /* Movimentar braço esquerdo */
+        case 3:
+            current_state = M_LEFT_ARM;
+            break;
+            
+            /* Movimentar braço direito */
+        case 4:
+            current_state = M_RIGHT_ARM;
+            break;
+            
+            /* Movimentar antebraço esquerdo */
+        case 5:
+            current_state = M_LEFT_FOREARM;
+            break;
+            
+            /* Movimentar antebraço direito */
+        case 6:
+            current_state = M_RIGHT_FOREARM;
+            break;
+            
+            /* Movimentar perna esquerda */
+        case 7:
+            current_state = M_LEFT_LEG;
+            break;
+            
+            /* Movimentar perna direita */
+        case 8:
+            current_state = M_RIGHT_LEG;
+            break;
+            
+            /* Movimentar coxa esquerda */
+        case 9:
+            current_state = M_LEFT_THIGH;
+            break;
+            
+            /* Movimentar coxa direita */
+        case 10:
+            current_state = M_RIGHT_THIGH;
+            break;
+            
+            /* Movimentar mundo */
+        case 11:
+            current_state = NO_STATE;
+            break;
+            
+        case 12:
+            /* Anima o boneco*/
+            current_state = NO_STATE;
+            ANIMATION = 1;
+            glutTimerFunc(33, TimerFunction, 1);
+            break;
+            
+            /* Sair */
+        case 0:
+            exit(EXIT_SUCCESS);
+            
+        default:
+            exit(EXIT_SUCCESS);
+            
+	}
+    
+	glutPostRedisplay();
+}
+
+void createMenu(void) {
+	menu_option = glutCreateMenu(menu);
+    
+	glutAddMenuEntry("Movimentar cabeça", 1);
+	glutAddMenuEntry("Movimentar tronco", 2);
+	glutAddMenuEntry("Movimentar braço esquerdo", 3);
+	glutAddMenuEntry("Movimentar braço direito", 4);
+	glutAddMenuEntry("Movimentar antebraço esquerdo", 5);
+	glutAddMenuEntry("Movimentar antebraço direito", 6);
+	glutAddMenuEntry("Movimentar perna esquerda", 7);
+	glutAddMenuEntry("Movimentar perna direita", 8);
+	glutAddMenuEntry("Movimentar panturrilha esquerda", 9);
+	glutAddMenuEntry("Movimentar panturrilha direita", 10);
+	glutAddMenuEntry("Movimentar mundo", 11);
+    glutAddMenuEntry("Animacao", 12);
+	glutAddMenuEntry("Sair", 0);
+    
+    
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void SpecialKeyboard(int key, int x, int y)
+{
+    
+    do_animation(current_state, key);
     
     /*  Mantém angulos em +/-360 graus */
     th %= 360;
@@ -874,17 +927,6 @@ void SpecialKeyboard(int key, int x, int y)
 }
 
 void InitLighting();
-
-void TimerFunction( int value ){
-    
-    if( X < 15 ) delta = 0.4;
-    if( X > 10 ) delta = -0.4;
-    
-    X += delta;
-    
-    glutPostRedisplay();
-    glutTimerFunc( 20, TimerFunction, 1);
-}
 void Init(void)
 {
     /* Seleciona a cor de fundo                 */
@@ -928,8 +970,7 @@ void Init(void)
     /* Configura a iluminação                                  */
     InitLighting();
     
-    /* Anima o boneco*/
-    glutTimerFunc(33, TimerFunction, 1);
+
     /* Cria menu */
     createMenu();
 }
