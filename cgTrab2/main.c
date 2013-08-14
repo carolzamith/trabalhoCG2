@@ -2,10 +2,15 @@
 //  main.c
 //  cgTrab2
 //
-//  Created by Marcelle Guine on 11/08/13.
+//  Created by Marcelle Guine e Carolina Zamith on 11/08/13.
 //  Copyright (c) 2013 Marcelle Guine. All rights reserved.
 //
 
+
+// EXTRAS DO TRABALHO //
+// 1) INSERÇÃO DA OPCÃO DE PROJEÇÃO POR PERSPECTIVA OU ORTOGONAL//
+// 2) POSSIBILIDADE DE REDIMENSIONAR O OBJETO
+// 3) 
 #ifdef WIN32
     #include <windows.h>
 #endif
@@ -13,6 +18,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdarg.h>
+#include <string.h>
+#include "print.c"
 
 #ifdef __APPLE__
     #include <GLUT/glut.h>
@@ -27,6 +35,20 @@
 #define PI 3.1415926535898
 #define Cos(th) cos(PI/180*(th))
 #define Sin(th) sin(PI/180*(th))
+int toggleMode = 1; /* modo da projeção */
+int toggleAxes = 1;   /* Aciona ou não os eixos */
+int toggleValues = 1;/* Aciona ou não valores */
+
+float X = -20;
+float delta = 0.4;
+
+
+
+float width = 0;
+float height = 0;
+
+
+double dimension=5.0; /* dim da caixa ortogonal */
 
 enum STATE {
 	NO_STATE,
@@ -46,11 +68,10 @@ enum STATE {
 int menu_option;
 
 /*  Variáveis globais */
-int toggleAxes = 0;   /* eixos on/off */
 int th = 0;  /* azimute do angulo de visão */
 int ph = 0;  /* elevação do angulo de visão */
-int fov = 30;   /* campo de visão */
-int asp = 1.0;    /* relação de aspecto */
+int filed_of_vision = 30;   /* campo de visão */
+int aspect_relation = 1;    /* relação de aspecto */
 
 float a_world [2] = {0, -35};
 float a_head [4] = {0, 0, 0, 0};
@@ -64,6 +85,23 @@ float a_rleg [2] = {-20, 1};
 float a_lthigh [2] = {20, 1};
 float a_rthigh [2] = {10, 1};
 
+#define FORE_ARM_ANGLE_FRONT 30
+#define FORE_ARM_ANGLE_BACK 120
+
+#define ARM_ANGLE_LEFT 20
+#define ARM_ANGLE_RIGHT 160
+
+#define ARM_ANGLE_FRONT 120
+#define ARM_ANGLE_BACK 140
+
+#define TIGHT_ANGLE_FRONT 30
+#define TIGHT_ANGLE_BACK 120
+
+#define TRUNK_ANGLE_BACK 40
+#define TRUNK_ANGLE_FRONT 80
+
+#define LEG_ANGLE_FRONT 140
+#define LEG_ANGLE_BACK 20
 
 tpImage * bobfront1, * bobfront2, * bobback,
 * bobleft,   * bobright,
@@ -88,19 +126,70 @@ void project()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
-    gluPerspective(fov, asp, 1.25, 20);
-    
+   
+    if (toggleMode) {
+        /* perspectiva */
+        gluPerspective(filed_of_vision,aspect_relation,dimension/4,4*dimension);    }
+    else {
+        /* projeção ortogonal*/
+//        glOrtho(-dimension*aspect_relation,+dimension*aspect_relation, -dimension,+dimension, -dimension,+dimension);
+        glOrtho(-dimension*aspect_relation,+dimension*aspect_relation, -dimension,+dimension, -dimension,+dimension);
+       
+    }
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
+
 /* Camera */
 void setEye()
 {
-    double Ex = -10*Sin(th)*Cos(ph);
-    double Ey = +10        *Sin(ph);
-    double Ez = +10*Cos(th)*Cos(ph);
-    gluLookAt(Ex, Ey, Ez, 0, 0, 0, 0, Cos(ph), 0);
+    if (toggleMode) {
+        double Ex = -2*dimension*Sin(th)*Cos(ph);
+        double Ey = +2*dimension        *Sin(ph);
+        double Ez = +2*dimension*Cos(th)*Cos(ph);
+        /* posiçao da camera*/
+        gluLookAt(Ex,Ey,Ez , 0,0,0 , 0,Cos(ph),0);
+    }
+    /*  Ortogonal - seta a orientação do mundo */
+    else {
+        glRotatef(ph,1,0,0);
+        glRotatef(th,0,1,0);
+    }
+}
+
+void drawAxes()
+{
+    if (toggleAxes) {
+        /*  Tamanho dos eixos */
+        double len = 2.0;
+        glColor3f(1.0,1.0,1.0);
+        glBegin(GL_LINES);
+        glVertex3d(0,0,0);
+        glVertex3d(len,0,0);
+        glVertex3d(0,0,0);
+        glVertex3d(0,len,0);
+        glVertex3d(0,0,0);
+        glVertex3d(0,0,len);
+        glEnd();
+        /*  Label dos eixos */
+        glRasterPos3d(len,0,0);
+        print("X");
+        glRasterPos3d(0,len,0);
+        print("Y");
+        glRasterPos3d(0,0,len);
+        print("Z");
+    }
+}
+
+void drawValues()
+{
+    if (toggleValues) {
+        glColor3f(0.8,0.8,0.8);
+        printAt(5,5,"Angulo de visao (th, ph) =(%d, %d)", th, ph);
+        printAt(5,25,"Modo de projecao =(%s)", toggleMode ? "Perspectiva" : "Ortogonal");
+    }
 }
 
 void drawKnuckle()
@@ -286,7 +375,7 @@ void drawLeftLeg()
     glTranslatef(-0.3, -1.0, 0.0);
     glPushMatrix();
     
-    //anti coxa
+    //antecoxa
     drawKnuckle();
     
     glRotatef(a_lleg[0], a_lleg[1], 0, 0);
@@ -310,7 +399,7 @@ void drawRightLeg()
 
     glPushMatrix();
     
-    //anti coxa
+    //antecoxa
     drawKnuckle();
     
     glRotatef(a_rleg[0], a_rleg[1], 0, 0);
@@ -334,12 +423,11 @@ void fullTrunk()
     glPushMatrix();
     
     glRotatef(a_trunk[0], a_trunk[1], 0, 0);
-    
     drawTrunk();
     drawHead();
     drawLeftArm();
     drawRightArm();
-    
+ 
     glPopMatrix();
 }
 
@@ -348,9 +436,11 @@ void drawRobot()
     glPushMatrix();
     
     fullTrunk();
-    
+    drawAxes();
+    drawValues();
     drawLeftLeg();
     drawRightLeg();
+  
     
     glPopMatrix();
 }
@@ -358,9 +448,12 @@ void drawRobot()
 void Display(void)
 {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
     glLoadIdentity();
     
     setEye();
+    
+    // Se colocar o X aqui, o boneco so aparece uma vez na tela
     
     glTranslatef (0.0, 0.0, -8.0);
     glRotated(a_world[0], 1, 0, 0);
@@ -445,6 +538,7 @@ void menu(int menu_option) {
 
 void createMenu(void) {
 	menu_option = glutCreateMenu(menu);
+  
 	glutAddMenuEntry("Movimentar cabeça", 1);
 	glutAddMenuEntry("Movimentar tronco", 2);
 	glutAddMenuEntry("Movimentar braço esquerdo", 3);
@@ -458,9 +552,9 @@ void createMenu(void) {
 	glutAddMenuEntry("Movimentar mundo", 11);
 	glutAddMenuEntry("Sair", 0);
     
+    
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
-
 
 
 // Callback para tratamento de eventos de teclado
@@ -469,337 +563,306 @@ void Keyboard (unsigned char key, int x, int y)
     //sair
     if (key == 27)
         exit(EXIT_SUCCESS);
-    
+    else if (key == 'a' || key == 'A') toggleAxes = 1-toggleAxes;
+    else if (key == 'v' || key == 'V') toggleValues = 1-toggleValues;
+    else if (key == 'm' || key == 'M') toggleMode = 1-toggleMode;
+    /*  Muda a dimensão do boneco */
+    else if (key == 'D') dimension += 0.1;
+    else if (key == 'd' && dimension>1) dimension -= 0.1;
+
     project();
     glutPostRedisplay();
 }
+
+
+
+void move_arm(float arm[4], int key)
+{
+    //move braço para direita
+    if (key == GLUT_KEY_RIGHT)
+    {
+        if (arm[1] < ARM_ANGLE_LEFT)
+        {
+            arm[1] += 5;
+            arm[3] = 1;
+        }
+    }
+    //move braço para esquerda
+    else if (key == GLUT_KEY_LEFT)
+    {
+        if (arm[1] > -ARM_ANGLE_RIGHT)
+        {
+            arm[1] -= 5;
+            arm[3] = 1;
+        }
+    }
+    //move braço para frente
+    else if (key == GLUT_KEY_UP)
+    {
+        if (arm[0] < ARM_ANGLE_FRONT)
+        {
+            arm[0] +=5;
+            arm[2] = 1;
+        }
+    }
+    //move braço para trás
+    else if (key == GLUT_KEY_DOWN)
+    {
+        if (arm[0] > -ARM_ANGLE_BACK)
+        {
+            arm[0] -= 5;
+            arm[2] = 1;
+        }
+    }
+}
+
+void move_left_arm(int key)
+{
+    move_arm(a_larm, key);
+}
+
+void move_right_arm(int key)
+{
+   move_arm(a_rarm, key);}
+
+void move_fore_arm(float forearm[2], int key)
+{
+    //move antebraço para frente
+    if (key == GLUT_KEY_DOWN)
+    {
+        if (forearm[0] < FORE_ARM_ANGLE_FRONT)
+        {
+            forearm[0] += 5;
+            forearm[1] = 1;
+        }
+    }
+    //move antebraço para trás
+    else if (key == GLUT_KEY_UP)
+    {
+        if (forearm[0] > -FORE_ARM_ANGLE_BACK)
+        {
+            forearm[0] -= 5;
+            forearm[1] = 1;
+        }
+    }
+}
+
+void move_left_fore_arm(int key)
+{
+    move_fore_arm(a_lforearm, key);
+}
+
+void move_right_fore_arm(int key)
+{
+    move_fore_arm(a_rforearm, key);
+}
+
+void move_leg(float leg[2], int key)
+{
+    //move perna para frente
+    if (key == GLUT_KEY_UP)
+    {
+        if (leg[0] < TIGHT_ANGLE_FRONT)
+        {
+            leg[0] += 5;
+            leg[1] = 1;
+        }
+    }
+    //move perna para trás
+    else if (key == GLUT_KEY_DOWN)
+    {
+        if (leg[0] > -TIGHT_ANGLE_BACK)
+        {
+            leg[0] -= 5;
+            leg[1] = 1;
+        }
+    }
+}
+
+void move_left_leg(int key)
+{
+    move_leg(a_lleg, key);
+}
+
+void move_right_leg(int key)
+{
+    move_leg(a_rleg, key);
+}
+
+void move_tigh(float tigh[2], int key)
+{
+    //move coxa para frente
+    if (key == GLUT_KEY_UP)
+    {
+        if (tigh[0] < LEG_ANGLE_FRONT)
+        {
+            tigh[0] += 5;
+            tigh[1] = 1;
+        }
+    }
+    //move coxa para trás
+    else if (key == GLUT_KEY_DOWN)
+    {
+        if (tigh[0] > -LEG_ANGLE_BACK)
+        {
+            tigh[0] -= 5;
+            tigh[1] = 1;
+        }
+    }
+}
+
+void move_left_tigh(int key)
+{
+    move_tigh(a_lthigh, key);
+}
+
+void move_right_tigh(int key)
+{
+    move_tigh(a_rthigh, key);
+}
+
+void move_head(int key)
+{
+    //move cabeça para direita
+    if (key == GLUT_KEY_RIGHT)
+    {
+        if (a_head[1] < 40)
+        {
+            a_head[1] += 10;
+            a_head[3] = 1;
+        }
+    }
+    //move cabeça para esquerda
+    else if (key == GLUT_KEY_LEFT)
+    {
+        if (a_head[1] > -40)
+        {
+            a_head[1] -= 10;
+            a_head[3] = 1;
+        }
+    }
+    //move cabeça para cima
+    else if (key == GLUT_KEY_UP)
+    {
+        if (a_head[0] < 10)
+        {
+            a_head[0] += 10;
+            a_head[2] = 1;
+        }
+    }
+    //move cabeça para baixo
+    else if (key == GLUT_KEY_DOWN)
+    {
+        if (a_head[0] > -10)
+        {
+            a_head[0] -= 10;
+            a_head[2] = 1;
+        }
+    }
+}
+
+void move_world(int key)
+{
+    //move mundo para esquerda
+    if (key == GLUT_KEY_LEFT)
+    {
+        a_world[1] -= 5;
+    }
+    //move mundo para direita
+    else if (key == GLUT_KEY_RIGHT)
+    {
+        a_world[1] += 5;
+    }
+    //move mundo para cima
+    else if (key == GLUT_KEY_UP)
+    {
+        a_world[0] += 5;
+    }
+    //move mundo para baixo
+    else if (key == GLUT_KEY_DOWN)
+    {
+        a_world[0] -= 5;
+    }
+}
+
+void move_trunk(int key)
+{
+    //move tronco para baixo
+    if (key == GLUT_KEY_DOWN)
+    {
+        if (a_trunk[0] < TRUNK_ANGLE_FRONT)
+        {
+            a_trunk[0] += 5;
+            a_trunk[1] = 1;
+        }
+    }
+    //move tronco para cima
+    else if (key == GLUT_KEY_UP)
+    {
+        if (a_trunk[0] > -TRUNK_ANGLE_BACK)
+        {
+            a_trunk[0] -= 5;
+            a_trunk[1] = 1;
+        }
+    }
+}
+
 
 void SpecialKeyboard(int key, int x, int y)
 {
     
     if (current_state == NO_STATE)
     {
-        //move mundo para esquerda
-        if (key == GLUT_KEY_LEFT)
-        {
-            a_world[1] -= 5;
-        }
-        //move mundo para direita
-        else if (key == GLUT_KEY_RIGHT)
-        {
-            a_world[1] += 5;
-        }
-        //move mundo para cima
-        else if (key == GLUT_KEY_UP)
-        {
-            a_world[0] += 5;
-        }
-        //move mundo para baixo
-        else if (key == GLUT_KEY_DOWN)
-        {
-             a_world[0] -= 5;
-        }
+        move_world(key);
     }
     
     else if (current_state == M_HEAD)
     {
-        //move cabeça para direita
-        if (key == GLUT_KEY_RIGHT)
-        {
-            if (a_head[1] < 40)
-            {
-                a_head[1] += 10;
-                a_head[3] = 1;
-            }
-        }
-        //move cabeça para esquerda
-        else if (key == GLUT_KEY_LEFT)
-        {
-            if (a_head[1] > -40)
-            {
-                a_head[1] -= 10;
-                a_head[3] = 1;
-            }
-        }
-        //move cabeça para cima
-        else if (key == GLUT_KEY_UP)
-        {
-            if (a_head[0] < 10)
-            {
-                a_head[0] += 10;
-                a_head[2] = 1;
-            }
-        }
-        //move cabeça para baixo
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_head[0] > -10)
-            {
-                a_head[0] -= 10;
-                a_head[2] = 1;
-            }
-        }
+        move_head(key);
     }
     
     else if ( current_state == M_TRUNK)
     {
-        //move tronco para cima
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_trunk[0] < 10)
-            {
-                a_trunk[0] += 5;
-                a_trunk[1] = 1;
-            }
-        }
-        //move tronco para baixo
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_trunk[0] > -10)
-            {
-                a_trunk[0] -= 5;
-                a_trunk[1] = 1;
-            }
-        }
+        move_trunk(key);
     }
-    
-    else if (current_state == M_LEFT_ARM)
+    else if(current_state == M_LEFT_ARM)
     {
-        //move braço esquedo para direita
-        if (key == GLUT_KEY_RIGHT)
-        {
-            if (a_larm[1] < 15)
-            {
-                a_larm[1] += 5;
-                a_larm[3] = 1;
-            }
-
-        }
-        //move braço esquerdo para esquerda
-        else if (key == GLUT_KEY_LEFT)
-        {
-            
-            if (a_larm[1] > -20)
-            {
-                a_larm[1] -= 5;
-                a_larm[3] = 1;
-            }
-
-            
-        }
-        //move braço esquerdo para frente
-        else if (key == GLUT_KEY_UP)
-        {
-            if (a_larm[0] < 30)
-            {
-                a_larm[0] +=5;
-                a_larm[2] = 1;
-            }
-        }
-        //move braço esquerdo para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            
-            if (a_larm[0] > -10)
-            {
-                a_larm[0] -= 5;
-                a_larm[2] = 1;
-            }
-            
-        }
+        move_left_arm(key);
     }
     
     else if (current_state == M_RIGHT_ARM)
     {
-        //move braço direito para direita
-        if (key == GLUT_KEY_RIGHT)
-        {
-            if (a_rarm[1] < 30)
-            {
-                a_rarm[1] += 5;
-                a_rarm[3] = 1;
-            }
-            
-        }
-        //move braço direito para esquerda
-        else if (key == GLUT_KEY_LEFT)
-        {
-            
-            if (a_rarm[1] > -10)
-            {
-                a_rarm[1] -= 5;
-                a_rarm[3] = 1;
-            }
-            
-            
-        }
-        //move braço direito para frente
-        else if (key == GLUT_KEY_UP)
-        {
-            if (a_rarm[0] < 30)
-            {
-                a_rarm[0] +=5;
-                a_rarm[2] = 1;
-            }
-        }
-        //move braço direito para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            
-            if (a_rarm[0] > -10)
-            {
-                a_rarm[0] -= 5;
-                a_rarm[2] = 1;
-            }
-            
-        }
+        move_right_arm(key);
     }
     
     else if (current_state == M_LEFT_FOREARM)
     {
-        //move antebraço esquerdo para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_lforearm[0] < 30)
-            {
-                a_lforearm[0] += 5;
-                a_lforearm[1] = 1;
-            }
-
-        }
-        //move antebraço esquerdo para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_lforearm[0] > -30)
-            {
-                a_lforearm[0] -= 5;
-                a_lforearm[1] = 1;
-            }
-
-        }
+        move_left_fore_arm(key);
     }
     
     else if (current_state == M_RIGHT_FOREARM)
     {
-        //move antebraço direito para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_rforearm[0] < 30)
-            {
-                a_rforearm[0] += 5;
-                a_rforearm[1] = 1;
-            }
-            
-        }
-        //move antebraço direito para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_rforearm[0] > -30)
-            {
-                a_rforearm[0] -= 5;
-                a_rforearm[1] = 1;
-            }
-            
-        }
+        move_right_fore_arm(key);
     }
     
     else if (current_state == M_LEFT_LEG)
     {
-        //move perna esquerda para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_lleg[0] < 30)
-            {
-                a_lleg[0] += 5;
-                a_lleg[1] = 1;
-            }
-
-        }
-        //move perna esquerda para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_lleg[0] > -30)
-            {
-                a_lleg[0] -= 5;
-                a_lleg[1] = 1;
-            }
-
-            
-        }
+        move_left_leg(key);
     }
     
     else if (current_state == M_RIGHT_LEG)
     {
-        //move perna direita para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_rleg[0] < 30)
-            {
-                a_rleg[0] += 5;
-                a_rleg[1] = 1;
-            }
-
-        }
-        //move perna direita para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_rleg[0] > -30)
-            {
-                a_rleg[0] -= 5;
-                a_rleg[1] = 1;
-            }
-
-            
-        }
+        move_right_leg(key);
     }
     
     else if (current_state == M_LEFT_THIGH)
     {
-        //move coxa esquerda para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_lthigh[0] < 30)
-            {
-                a_lthigh[0] += 5;
-                a_lthigh[1] = 1;
-            }
-
-            
-        }
-        //move coxa esquerda para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_lthigh[0] > -30)
-            {
-                a_lthigh[0] -= 5;
-                a_lthigh[1] = 1;
-            }
-
-        }
+        move_left_tigh(key);
     }
     
     else if (current_state == M_RIGHT_THIGH)
     {
-        //move coxa direita para frente
-        if (key == GLUT_KEY_UP)
-        {
-            if (a_rthigh[0] < 30)
-            {
-                a_rthigh[0] += 5;
-                a_rthigh[1] = 1;
-            }
-
-        }
-        //move coxa direita para trás
-        else if (key == GLUT_KEY_DOWN)
-        {
-            if (a_rthigh[0] > -30)
-            {
-                a_rthigh[0] -= 5;
-                a_rthigh[1] = 1;
-            }
-
-        }
+        move_right_tigh(key);
     }
     
     /*  Mantém angulos em +/-360 graus */
@@ -812,6 +875,16 @@ void SpecialKeyboard(int key, int x, int y)
 
 void InitLighting();
 
+void TimerFunction( int value ){
+    
+    if( X < 15 ) delta = 0.4;
+    if( X > 10 ) delta = -0.4;
+    
+    X += delta;
+    
+    glutPostRedisplay();
+    glutTimerFunc( 20, TimerFunction, 1);
+}
 void Init(void)
 {
     /* Seleciona a cor de fundo                 */
@@ -851,12 +924,12 @@ void Init(void)
     texHandle[3] = CreateTexture(bobleft,    GL_LINEAR, GL_LINEAR);
     texHandle[4] = CreateTexture(bobbottom,  GL_LINEAR, GL_LINEAR);
     texHandle[5] = CreateTexture(bobfront1,  GL_LINEAR, GL_LINEAR);
-    texHandle[6] = CreateTexture(bobfront2,  GL_LINEAR, GL_LINEAR);
-    
     
     /* Configura a iluminação                                  */
     InitLighting();
     
+    /* Anima o boneco*/
+    glutTimerFunc(33, TimerFunction, 1);
     /* Cria menu */
     createMenu();
 }
@@ -917,6 +990,8 @@ void InitLighting()
 
 void Reshape (int w, int h)
 {
+   
+
     /* Configura o tamanho da janela de desenho como igual o tamanho total   */
     /* do canvas                                                             */
     glViewport (0, 0, (GLsizei) w, (GLsizei) h);
@@ -933,7 +1008,7 @@ void Reshape (int w, int h)
     /* Carrega a matriz de modelagem e visualização com a matriz identidade  */
     glLoadIdentity();
     
-    asp = (h>0) ? (double)w/h : 1;
+    aspect_relation = (h>0) ? (double)w/h : 1;
     glViewport(0, 0, w, h);
     project();
 }
